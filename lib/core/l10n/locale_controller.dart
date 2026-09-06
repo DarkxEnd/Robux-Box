@@ -43,9 +43,7 @@ class LocaleController extends Notifier<Locale?> {
   Locale? build() {
     final code = _prefs.locale;
     if (code == null) return null;
-    return supportedLocales
-        .where((l) => l.languageCode == code)
-        .firstOrNull;
+    return supportedLocales.where((l) => l.languageCode == code).firstOrNull;
   }
 
   Future<void> set(Locale? locale) async {

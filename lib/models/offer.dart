@@ -26,19 +26,19 @@ class Offer extends Equatable {
   });
 
   factory Offer.fromMap(String id, Map<String, dynamic> map) => Offer(
-        id: id,
-        title: Parse.toStr(map['title']),
-        provider: OfferwallProvider.fromWire(map['provider'] as String?),
-        description: Parse.toStr(map['description']),
-        imageUrl: Parse.toStr(map['imageUrl']),
-        estimatedCoins: Parse.toInt(map['estimatedCoins']),
-        category: Parse.toStr(map['category'], 'other'),
-        difficulty: Parse.toInt(map['difficulty'], 1).clamp(1, 3),
-        isActive: Parse.toBool(map['isActive'], true),
-        sortOrder: Parse.toInt(map['sortOrder']),
-        countries: Parse.toStringList(map['countries']),
-        deeplink: map['deeplink'] as String?,
-      );
+    id: id,
+    title: Parse.toStr(map['title']),
+    provider: OfferwallProvider.fromWire(map['provider'] as String?),
+    description: Parse.toStr(map['description']),
+    imageUrl: Parse.toStr(map['imageUrl']),
+    estimatedCoins: Parse.toInt(map['estimatedCoins']),
+    category: Parse.toStr(map['category'], 'other'),
+    difficulty: Parse.toInt(map['difficulty'], 1).clamp(1, 3),
+    isActive: Parse.toBool(map['isActive'], true),
+    sortOrder: Parse.toInt(map['sortOrder']),
+    countries: Parse.toStringList(map['countries']),
+    deeplink: map['deeplink'] as String?,
+  );
 
   final String id;
   final String title;

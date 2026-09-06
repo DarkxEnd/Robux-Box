@@ -93,8 +93,11 @@ class BalanceHeroCard extends ConsumerWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Icon(Icons.monetization_on,
-                    color: AppTheme.coin, size: 34),
+                const Icon(
+                  Icons.monetization_on,
+                  color: AppTheme.coin,
+                  size: 34,
+                ),
                 const SizedBox(width: AppDimens.sm),
                 Flexible(
                   child: AnimatedCounter(

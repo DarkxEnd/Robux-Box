@@ -35,8 +35,10 @@ class AppConfig {
 
     return AppConfig(
       flavor: flavor,
-      useEmulators:
-          const bool.fromEnvironment('USE_EMULATORS', defaultValue: false),
+      useEmulators: const bool.fromEnvironment(
+        'USE_EMULATORS',
+        defaultValue: false,
+      ),
       admobRewardedAndroid: const String.fromEnvironment(
         'ADMOB_REWARDED_ANDROID',
         defaultValue: 'ca-app-pub-3940256099942544/5224354917',
@@ -53,8 +55,10 @@ class AppConfig {
         'ADMOB_BANNER_ANDROID',
         defaultValue: 'ca-app-pub-3940256099942544/6300978111',
       ),
-      minWithdrawCoins:
-          const int.fromEnvironment('MIN_WITHDRAW_COINS', defaultValue: 1000),
+      minWithdrawCoins: const int.fromEnvironment(
+        'MIN_WITHDRAW_COINS',
+        defaultValue: 1000,
+      ),
       supportEmail: const String.fromEnvironment(
         'SUPPORT_EMAIL',
         defaultValue: 'robuxbox10@gmail.com',
@@ -90,15 +94,15 @@ class AppConfig {
 
   @visibleForTesting
   AppConfig copyWith({Flavor? flavor, bool? useEmulators}) => AppConfig(
-        flavor: flavor ?? this.flavor,
-        useEmulators: useEmulators ?? this.useEmulators,
-        admobRewardedAndroid: admobRewardedAndroid,
-        admobRewardedInterstitialAndroid: admobRewardedInterstitialAndroid,
-        admobAppOpenAndroid: admobAppOpenAndroid,
-        admobBannerAndroid: admobBannerAndroid,
-        minWithdrawCoins: minWithdrawCoins,
-        supportEmail: supportEmail,
-        privacyUrl: privacyUrl,
-        termsUrl: termsUrl,
-      );
+    flavor: flavor ?? this.flavor,
+    useEmulators: useEmulators ?? this.useEmulators,
+    admobRewardedAndroid: admobRewardedAndroid,
+    admobRewardedInterstitialAndroid: admobRewardedInterstitialAndroid,
+    admobAppOpenAndroid: admobAppOpenAndroid,
+    admobBannerAndroid: admobBannerAndroid,
+    minWithdrawCoins: minWithdrawCoins,
+    supportEmail: supportEmail,
+    privacyUrl: privacyUrl,
+    termsUrl: termsUrl,
+  );
 }

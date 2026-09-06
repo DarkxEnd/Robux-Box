@@ -60,7 +60,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ProfileMenuTile(
                     icon: Icons.language,
                     label: l.settingsLanguage,
-                    badge: localeNames[locale?.languageCode] ??
+                    badge:
+                        localeNames[locale?.languageCode] ??
                         l.settingsThemeSystem,
                     onTap: () => _pickLanguage(context),
                   ),
@@ -72,8 +73,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       ThemeMode.dark => l.settingsThemeDark,
                       ThemeMode.system => l.settingsThemeSystem,
                     },
-                    onTap: () =>
-                        ref.read(themeModeProvider.notifier).cycle(),
+                    onTap: () => ref.read(themeModeProvider.notifier).cycle(),
                   ),
                   _SwitchTile(
                     icon: Icons.volume_up_outlined,
@@ -182,8 +182,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             for (final locale in supportedLocales)
               ListTile(
-                title: Text(localeNames[locale.languageCode] ??
-                    locale.languageCode),
+                title: Text(
+                  localeNames[locale.languageCode] ?? locale.languageCode,
+                ),
                 onTap: () {
                   ref.read(localeProvider.notifier).set(locale);
                   Navigator.of(context).pop();
@@ -250,8 +251,11 @@ class _SwitchTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SwitchListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
-      secondary: Icon(icon, color: Theme.of(context).colorScheme.primary,
-          size: 21),
+      secondary: Icon(
+        icon,
+        color: Theme.of(context).colorScheme.primary,
+        size: 21,
+      ),
       title: Text(label),
       value: value,
       onChanged: onChanged,

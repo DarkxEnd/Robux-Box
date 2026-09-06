@@ -20,14 +20,14 @@ class ThemeController extends Notifier<ThemeMode> {
   /// Cycles system → light → dark → system, for the single-tap toggle in
   /// settings.
   Future<void> cycle() => set(switch (state) {
-        ThemeMode.system => ThemeMode.light,
-        ThemeMode.light => ThemeMode.dark,
-        ThemeMode.dark => ThemeMode.system,
-      });
+    ThemeMode.system => ThemeMode.light,
+    ThemeMode.light => ThemeMode.dark,
+    ThemeMode.dark => ThemeMode.system,
+  });
 
   static ThemeMode _parse(String v) => switch (v) {
-        'light' => ThemeMode.light,
-        'dark' => ThemeMode.dark,
-        _ => ThemeMode.system,
-      };
+    'light' => ThemeMode.light,
+    'dark' => ThemeMode.dark,
+    _ => ThemeMode.system,
+  };
 }

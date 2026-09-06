@@ -31,7 +31,8 @@ class ProfileMenuTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
       leading: Icon(icon, color: color ?? theme.colorScheme.primary, size: 21),
       title: Text(label, style: TextStyle(color: color)),
-      trailing: trailing ??
+      trailing:
+          trailing ??
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [

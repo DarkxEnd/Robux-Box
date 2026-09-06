@@ -25,9 +25,11 @@ class NotificationRepository {
       .orderBy('createdAt', descending: true)
       .limit(limit)
       .snapshots()
-      .map((snap) => snap.docs
-          .map((d) => AppNotification.fromMap(d.id, d.data()))
-          .toList());
+      .map(
+        (snap) => snap.docs
+            .map((d) => AppNotification.fromMap(d.id, d.data()))
+            .toList(),
+      );
 
   /// Unread count, from a server-side aggregation rather than by reading every
   /// document — the badge is on the home screen and would otherwise pull the
@@ -48,8 +50,9 @@ class NotificationRepository {
 
   Future<Result<void>> markAllRead(String uid) async {
     try {
-      final unread =
-          await _col(uid).where('isRead', isEqualTo: false).limit(400).get();
+      final unread = await _col(
+        uid,
+      ).where('isRead', isEqualTo: false).limit(400).get();
       if (unread.docs.isEmpty) return const Result.success(null);
 
       // Batched: 400 individual writes would be 400 round trips and could

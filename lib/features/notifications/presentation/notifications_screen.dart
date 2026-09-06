@@ -30,9 +30,7 @@ class NotificationsScreen extends ConsumerWidget {
           icon: const Icon(Icons.done_all),
           onPressed: uid == null
               ? null
-              : () => ref
-                  .read(notificationRepositoryProvider)
-                  .markAllRead(uid),
+              : () => ref.read(notificationRepositoryProvider).markAllRead(uid),
         ),
       ],
       body: AsyncView(
@@ -64,13 +62,13 @@ class _Tile extends ConsumerWidget {
   final AppNotification notification;
 
   IconData get _icon => switch (notification.type) {
-        'redemption' => Icons.card_giftcard,
-        'offerwall' => Icons.task_alt,
-        'vip' => Icons.workspace_premium,
-        'support' => Icons.support_agent,
-        'achievement' => Icons.military_tech,
-        _ => Icons.notifications,
-      };
+    'redemption' => Icons.card_giftcard,
+    'offerwall' => Icons.task_alt,
+    'vip' => Icons.workspace_premium,
+    'support' => Icons.support_agent,
+    'achievement' => Icons.military_tech,
+    _ => Icons.notifications,
+  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

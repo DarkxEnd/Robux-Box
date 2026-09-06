@@ -33,59 +33,61 @@ import 'firebase_options.dart';
 Future<void> bootstrap() async {
   // Deliberately not awaited: this is the app's root zone and runs for the
   // process lifetime.
-  unawaited(runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
+  unawaited(
+    runZonedGuarded(
+      () async {
+        WidgetsFlutterBinding.ensureInitialized();
 
-      await SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-      );
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
+        SystemChrome.setSystemUIOverlayStyle(
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        );
 
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
 
-      _installErrorHandlers();
+        _installErrorHandlers();
 
-      // Registered before runApp: a push that launches the app from cold start
-      // is delivered to this handler before the first frame.
-      FirebaseMessaging.onBackgroundMessage(
-        firebaseMessagingBackgroundHandler,
-      );
+        // Registered before runApp: a push that launches the app from cold start
+        // is delivered to this handler before the first frame.
+        FirebaseMessaging.onBackgroundMessage(
+          firebaseMessagingBackgroundHandler,
+        );
 
-      final prefs = await PreferencesService.create();
-      final config = AppConfig.fromEnvironment();
+        final prefs = await PreferencesService.create();
+        final config = AppConfig.fromEnvironment();
 
-      final container = ProviderContainer(
-        overrides: [
-          preferencesProvider.overrideWithValue(prefs),
-          appConfigProvider.overrideWithValue(config),
-          themeModeProvider.overrideWith(() => ThemeController(prefs)),
-          localeProvider.overrideWith(() => LocaleController(prefs)),
-        ],
-      );
+        final container = ProviderContainer(
+          overrides: [
+            preferencesProvider.overrideWithValue(prefs),
+            appConfigProvider.overrideWithValue(config),
+            themeModeProvider.overrideWith(() => ThemeController(prefs)),
+            localeProvider.overrideWith(() => LocaleController(prefs)),
+          ],
+        );
 
-      // App Check must be active before the first callable, but the app does
-      // not need to wait for it to paint — an early call simply retries.
-      unawaited(container.read(securityServiceProvider).initialise());
-      unawaited(container.read(adsServiceProvider).initialise());
+        // App Check must be active before the first callable, but the app does
+        // not need to wait for it to paint — an early call simply retries.
+        unawaited(container.read(securityServiceProvider).initialise());
+        unawaited(container.read(adsServiceProvider).initialise());
 
-      runApp(
-        UncontrolledProviderScope(
-          container: container,
-          child: const RobuxBoxApp(),
-        ),
-      );
-    },
-    (error, stack) {
-      log.e('uncaught zone error', error, stack);
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    },
-  ));
+        runApp(
+          UncontrolledProviderScope(
+            container: container,
+            child: const RobuxBoxApp(),
+          ),
+        );
+      },
+      (error, stack) {
+        log.e('uncaught zone error', error, stack);
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      },
+    ),
+  );
 }
 
 void _installErrorHandlers() {
@@ -93,9 +95,7 @@ void _installErrorHandlers() {
 
   // Off in debug: local crashes belong in the console, and uploading them
   // pollutes the release crash-free-users metric.
-  unawaited(
-    crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode),
-  );
+  unawaited(crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode));
 
   FlutterError.onError = (details) {
     FlutterError.presentError(details);

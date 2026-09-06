@@ -18,11 +18,8 @@ enum RedemptionStatus {
 
   final String wire;
 
-  static RedemptionStatus fromWire(String? v) =>
-      RedemptionStatus.values.firstWhere(
-        (s) => s.wire == v,
-        orElse: () => RedemptionStatus.pending,
-      );
+  static RedemptionStatus fromWire(String? v) => RedemptionStatus.values
+      .firstWhere((s) => s.wire == v, orElse: () => RedemptionStatus.pending);
 
   bool get isTerminal => this != pending && this != processing;
   bool get wasRefunded => this == rejected || this == cancelled;
@@ -55,24 +52,24 @@ class Redemption extends Equatable {
   });
 
   factory Redemption.fromMap(String id, Map<String, dynamic> map) => Redemption(
-        id: id,
-        uid: Parse.toStr(map['uid']),
-        rewardId: Parse.toStr(map['rewardId']),
-        rewardTitle: Parse.toStr(map['rewardTitle']),
-        coinCost: Parse.toInt(map['coinCost']),
-        status: RedemptionStatus.fromWire(map['status'] as String?),
-        kind: Parse.toStr(map['kind'], 'robux'),
-        faceValue: Parse.toDouble(map['faceValue']),
-        currency: Parse.toStr(map['currency'], 'RBX'),
-        robloxUsername: map['robloxUsername'] as String?,
-        email: map['email'] as String?,
-        deliveredCode: map['deliveredCode'] as String?,
-        adminNote: map['adminNote'] as String?,
-        rejectionReason: map['rejectionReason'] as String?,
-        createdAt: Parse.toDate(map['createdAt']),
-        updatedAt: Parse.toDate(map['updatedAt']),
-        completedAt: Parse.toDate(map['completedAt']),
-      );
+    id: id,
+    uid: Parse.toStr(map['uid']),
+    rewardId: Parse.toStr(map['rewardId']),
+    rewardTitle: Parse.toStr(map['rewardTitle']),
+    coinCost: Parse.toInt(map['coinCost']),
+    status: RedemptionStatus.fromWire(map['status'] as String?),
+    kind: Parse.toStr(map['kind'], 'robux'),
+    faceValue: Parse.toDouble(map['faceValue']),
+    currency: Parse.toStr(map['currency'], 'RBX'),
+    robloxUsername: map['robloxUsername'] as String?,
+    email: map['email'] as String?,
+    deliveredCode: map['deliveredCode'] as String?,
+    adminNote: map['adminNote'] as String?,
+    rejectionReason: map['rejectionReason'] as String?,
+    createdAt: Parse.toDate(map['createdAt']),
+    updatedAt: Parse.toDate(map['updatedAt']),
+    completedAt: Parse.toDate(map['completedAt']),
+  );
 
   final String id;
   final String uid;

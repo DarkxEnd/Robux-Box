@@ -29,7 +29,8 @@ class AdminTicketsScreen extends ConsumerWidget {
         children: [
           TierFilterRow(
             selected: filter,
-            onSelected: (v) => ref.read(ticketFilterProvider.notifier).state = v,
+            onSelected: (v) =>
+                ref.read(ticketFilterProvider.notifier).state = v,
             options: [
               ('open', l.supportOpen),
               ('awaiting_user', 'Awaiting user'),
@@ -140,7 +141,9 @@ class _Tile extends ConsumerWidget {
     }
 
     final name = ref.read(authStateProvider).valueOrNull?.displayName;
-    final result = await ref.read(adminRepositoryProvider).replyToTicket(
+    final result = await ref
+        .read(adminRepositoryProvider)
+        .replyToTicket(
           ticketId: ticket.id,
           body: body.text,
           authorName: name ?? 'Support',

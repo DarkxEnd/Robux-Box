@@ -17,22 +17,22 @@ class Wallet extends Equatable {
   });
 
   const Wallet.empty(this.uid)
-      : balance = 0,
-        lifetimeEarned = 0,
-        lifetimeSpent = 0,
-        updatedAt = null;
+    : balance = 0,
+      lifetimeEarned = 0,
+      lifetimeSpent = 0,
+      updatedAt = null;
 
   /// The stored field is `coins`, not `balance` — verified against both
   /// functions/src/lib/wallet.ts and the shipped bundle. Reading `balance`
   /// here silently shows every user a zero balance, which is exactly the bug
   /// this comment exists to prevent recurring.
   factory Wallet.fromMap(String uid, Map<String, dynamic> map) => Wallet(
-        uid: uid,
-        balance: Parse.toInt(map['coins']),
-        lifetimeEarned: Parse.toInt(map['lifetimeEarned']),
-        lifetimeSpent: Parse.toInt(map['lifetimeSpent']),
-        updatedAt: Parse.toDate(map['updatedAt']),
-      );
+    uid: uid,
+    balance: Parse.toInt(map['coins']),
+    lifetimeEarned: Parse.toInt(map['lifetimeEarned']),
+    lifetimeSpent: Parse.toInt(map['lifetimeSpent']),
+    updatedAt: Parse.toDate(map['updatedAt']),
+  );
 
   final String uid;
 

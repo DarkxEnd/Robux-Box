@@ -62,10 +62,8 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                 context.unfocus();
                 await controller.confirmCode(_code.text);
               },
-              onResend: () => controller.sendCode(
-                state.phoneNumber,
-                resend: true,
-              ),
+              onResend: () =>
+                  controller.sendCode(state.phoneNumber, resend: true),
             )
           : _NumberStep(
               formKey: _phoneKey,
@@ -145,10 +143,7 @@ class _CodeStep extends StatelessWidget {
       children: [
         const SizedBox(height: AppDimens.xl),
         Text(l.authCodeSent, style: Theme.of(context).textTheme.bodyMedium),
-        Text(
-          state.phoneNumber,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(state.phoneNumber, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: AppDimens.xl),
         TextFormField(
           controller: controller,

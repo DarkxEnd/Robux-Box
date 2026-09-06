@@ -22,17 +22,17 @@ class HomeBanner extends Equatable {
   });
 
   factory HomeBanner.fromMap(String id, Map<String, dynamic> map) => HomeBanner(
-        id: id,
-        title: Parse.toStr(map['title']),
-        subtitle: Parse.toStr(map['subtitle']),
-        imageUrl: Parse.toStr(map['imageUrl']),
-        gradientColors: Parse.toStringList(map['gradientColors']),
-        deeplink: map['deeplink'] as String?,
-        isActive: Parse.toBool(map['isActive'], true),
-        sortOrder: Parse.toInt(map['sortOrder']),
-        startsAt: Parse.toDate(map['startsAt']),
-        endsAt: Parse.toDate(map['endsAt']),
-      );
+    id: id,
+    title: Parse.toStr(map['title']),
+    subtitle: Parse.toStr(map['subtitle']),
+    imageUrl: Parse.toStr(map['imageUrl']),
+    gradientColors: Parse.toStringList(map['gradientColors']),
+    deeplink: map['deeplink'] as String?,
+    isActive: Parse.toBool(map['isActive'], true),
+    sortOrder: Parse.toInt(map['sortOrder']),
+    startsAt: Parse.toDate(map['startsAt']),
+    endsAt: Parse.toDate(map['endsAt']),
+  );
 
   final String id;
   final String title;

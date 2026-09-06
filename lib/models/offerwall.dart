@@ -13,11 +13,8 @@ enum OfferwallProvider {
   final String wire;
   final String displayName;
 
-  static OfferwallProvider fromWire(String? v) =>
-      OfferwallProvider.values.firstWhere(
-        (p) => p.wire == v,
-        orElse: () => OfferwallProvider.cpx,
-      );
+  static OfferwallProvider fromWire(String? v) => OfferwallProvider.values
+      .firstWhere((p) => p.wire == v, orElse: () => OfferwallProvider.cpx);
 
   /// Bundled logo. Falls back to a generic tile if the asset is missing.
   String get logoAsset => 'assets/icons/brands/$wire.png';

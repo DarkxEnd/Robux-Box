@@ -124,8 +124,9 @@ class RedemptionTile extends ConsumerWidget {
     );
     if (confirmed != true || !context.mounted) return;
 
-    final result =
-        await ref.read(redemptionRepositoryProvider).cancel(redemption.id);
+    final result = await ref
+        .read(redemptionRepositoryProvider)
+        .cancel(redemption.id);
     if (!context.mounted) return;
     result.when(
       success: (_) => AppToast.success(context, l.redemptionRefunded),

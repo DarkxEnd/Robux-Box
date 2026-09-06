@@ -29,7 +29,10 @@ class AdminUsersScreen extends ConsumerWidget {
         data: (result) {
           final (users, _) = result;
           if (users.isEmpty) {
-            return EmptyView(icon: Icons.people_outline, title: l.emptyNothingHere);
+            return EmptyView(
+              icon: Icons.people_outline,
+              title: l.emptyNothingHere,
+            );
           }
           return ListView.separated(
             padding: const EdgeInsets.all(AppDimens.lg),
@@ -84,12 +87,18 @@ class _UserTile extends ConsumerWidget {
                       StatusPill.forStatus(user.status),
                     if (user.vipLevel.isVipTier) ...[
                       const SizedBox(width: AppDimens.xs),
-                      Icon(user.vipLevel.vipIcon,
-                          size: 14, color: user.vipLevel.vipColor),
+                      Icon(
+                        user.vipLevel.vipIcon,
+                        size: 14,
+                        color: user.vipLevel.vipColor,
+                      ),
                     ],
                     if (user.countryCode != null) ...[
                       const SizedBox(width: AppDimens.sm),
-                      Text(user.countryCode!, style: theme.textTheme.labelSmall),
+                      Text(
+                        user.countryCode!,
+                        style: theme.textTheme.labelSmall,
+                      ),
                     ],
                   ],
                 ),
@@ -138,11 +147,12 @@ class _UserTile extends ConsumerWidget {
               title: Text(user.status == 'banned' ? 'Unban' : 'Ban'),
               onTap: () async {
                 Navigator.of(sheetContext).pop();
-                final result =
-                    await ref.read(adminRepositoryProvider).setAccountStatus(
-                          uid: user.uid,
-                          status: user.status == 'banned' ? 'active' : 'banned',
-                        );
+                final result = await ref
+                    .read(adminRepositoryProvider)
+                    .setAccountStatus(
+                      uid: user.uid,
+                      status: user.status == 'banned' ? 'active' : 'banned',
+                    );
                 if (!context.mounted) return;
                 result.when(
                   success: (_) {
@@ -172,8 +182,7 @@ class _UserTile extends ConsumerWidget {
           children: [
             TextField(
               controller: amount,
-              keyboardType:
-                  const TextInputType.numberWithOptions(signed: true),
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
               decoration: const InputDecoration(
                 labelText: 'Amount',
                 // Negative is how coins are clawed back — CPAlead has no
@@ -207,7 +216,9 @@ class _UserTile extends ConsumerWidget {
       return;
     }
 
-    final result = await ref.read(adminRepositoryProvider).adjustCoins(
+    final result = await ref
+        .read(adminRepositoryProvider)
+        .adjustCoins(
           uid: user.uid,
           amount: value,
           reason: reason.text.trim().isEmpty
@@ -231,7 +242,13 @@ class _UserTile extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            for (final t in const ['none', 'bronze', 'silver', 'gold', 'diamond'])
+            for (final t in const [
+              'none',
+              'bronze',
+              'silver',
+              'gold',
+              'diamond',
+            ])
               ListTile(
                 leading: Icon(t.vipIcon, color: t.vipColor),
                 title: Text(t.vipLabel),

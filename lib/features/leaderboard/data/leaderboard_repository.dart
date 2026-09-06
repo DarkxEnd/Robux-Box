@@ -19,17 +19,18 @@ class LeaderboardRepository {
   Stream<List<LeaderboardEntry>> watch(
     LeaderboardPeriod period, {
     int limit = AppConstants.leaderboardPageSize,
-  }) =>
-      _db
-          .collection(FsPaths.leaderboards)
-          .doc(period.wire)
-          .collection(FsPaths.leaderboardEntries)
-          .orderBy('rank')
-          .limit(limit)
-          .snapshots()
-          .map((snap) => snap.docs
-              .map((d) => LeaderboardEntry.fromMap(d.id, d.data()))
-              .toList());
+  }) => _db
+      .collection(FsPaths.leaderboards)
+      .doc(period.wire)
+      .collection(FsPaths.leaderboardEntries)
+      .orderBy('rank')
+      .limit(limit)
+      .snapshots()
+      .map(
+        (snap) => snap.docs
+            .map((d) => LeaderboardEntry.fromMap(d.id, d.data()))
+            .toList(),
+      );
 
   /// The signed-in user's own row, which is usually outside the top N.
   Stream<LeaderboardEntry?> watchMine(LeaderboardPeriod period, String uid) =>
@@ -39,15 +40,18 @@ class LeaderboardRepository {
           .collection(FsPaths.leaderboardEntries)
           .doc(uid)
           .snapshots()
-          .map((s) => s.exists ? LeaderboardEntry.fromMap(uid, s.data()!) : null);
+          .map(
+            (s) => s.exists ? LeaderboardEntry.fromMap(uid, s.data()!) : null,
+          );
 }
 
 final leaderboardRepositoryProvider = Provider<LeaderboardRepository>((ref) {
   return LeaderboardRepository(ref.watch(firestoreProvider));
 });
 
-final selectedPeriodProvider =
-    StateProvider<LeaderboardPeriod>((ref) => LeaderboardPeriod.weekly);
+final selectedPeriodProvider = StateProvider<LeaderboardPeriod>(
+  (ref) => LeaderboardPeriod.weekly,
+);
 
 final leaderboardProvider = StreamProvider<List<LeaderboardEntry>>((ref) {
   final period = ref.watch(selectedPeriodProvider);

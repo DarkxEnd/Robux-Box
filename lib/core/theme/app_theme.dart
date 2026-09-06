@@ -27,34 +27,34 @@ abstract final class AppTheme {
   static const Color _lightBg = Color(0xFFF6F7FB);
 
   static ThemeData get dark => _build(
-        ColorScheme.fromSeed(
-          seedColor: primary,
-          brightness: Brightness.dark,
-        ).copyWith(
-          primary: primaryBright,
-          secondary: accent,
-          tertiary: coin,
-          surface: _darkSurface,
-          error: danger,
-        ),
-        scaffoldBackground: _darkBg,
-        textTheme: AppTypography.dark,
-      );
+    ColorScheme.fromSeed(
+      seedColor: primary,
+      brightness: Brightness.dark,
+    ).copyWith(
+      primary: primaryBright,
+      secondary: accent,
+      tertiary: coin,
+      surface: _darkSurface,
+      error: danger,
+    ),
+    scaffoldBackground: _darkBg,
+    textTheme: AppTypography.dark,
+  );
 
   static ThemeData get light => _build(
-        ColorScheme.fromSeed(
-          seedColor: primary,
-          brightness: Brightness.light,
-        ).copyWith(
-          primary: primary,
-          secondary: const Color(0xFF0094B3),
-          tertiary: const Color(0xFFB07E00),
-          surface: Colors.white,
-          error: danger,
-        ),
-        scaffoldBackground: _lightBg,
-        textTheme: AppTypography.light,
-      );
+    ColorScheme.fromSeed(
+      seedColor: primary,
+      brightness: Brightness.light,
+    ).copyWith(
+      primary: primary,
+      secondary: const Color(0xFF0094B3),
+      tertiary: const Color(0xFFB07E00),
+      surface: Colors.white,
+      error: danger,
+    ),
+    scaffoldBackground: _lightBg,
+    textTheme: AppTypography.light,
+  );
 
   static ThemeData _build(
     ColorScheme scheme, {
@@ -102,10 +102,7 @@ abstract final class AppTheme {
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(AppDimens.buttonHeight),
           shape: const RoundedRectangleBorder(borderRadius: AppDimens.brMd),
-          textStyle: const TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-          ),
+          textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
         ),
       ),
 
@@ -121,7 +118,10 @@ abstract final class AppTheme {
         style: TextButton.styleFrom(
           // Text buttons default to a 36pt target, below the accessibility
           // minimum.
-          minimumSize: const Size(AppDimens.minTouchTarget, AppDimens.minTouchTarget),
+          minimumSize: const Size(
+            AppDimens.minTouchTarget,
+            AppDimens.minTouchTarget,
+          ),
         ),
       ),
 
@@ -171,7 +171,9 @@ abstract final class AppTheme {
 
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: isDark ? const Color(0xFF232734) : const Color(0xFF2A2D36),
+        backgroundColor: isDark
+            ? const Color(0xFF232734)
+            : const Color(0xFF2A2D36),
         contentTextStyle: const TextStyle(color: Colors.white),
         shape: const RoundedRectangleBorder(borderRadius: AppDimens.brMd),
       ),

@@ -55,7 +55,10 @@ class GeoTierService {
           timeLimit: Duration(seconds: 10),
         ),
       );
-      final places = await placemarkFromCoordinates(pos.latitude, pos.longitude);
+      final places = await placemarkFromCoordinates(
+        pos.latitude,
+        pos.longitude,
+      );
       final code = places.firstOrNull?.isoCountryCode?.toUpperCase();
       return (code != null && code.length == 2) ? code : null;
     } catch (e) {

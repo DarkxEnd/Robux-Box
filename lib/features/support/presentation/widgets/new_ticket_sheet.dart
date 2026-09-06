@@ -11,15 +11,13 @@ import '../../data/support_repository.dart';
 import '../../domain/support_providers.dart';
 
 Future<void> showNewTicketSheet(BuildContext context) => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: const NewTicketSheet(),
-      ),
-    );
+  context: context,
+  isScrollControlled: true,
+  builder: (context) => Padding(
+    padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+    child: const NewTicketSheet(),
+  ),
+);
 
 class NewTicketSheet extends ConsumerStatefulWidget {
   const NewTicketSheet({super.key});
@@ -48,7 +46,9 @@ class _NewTicketSheetState extends ConsumerState<NewTicketSheet> {
     if (uid == null) return;
 
     setState(() => _busy = true);
-    final result = await ref.read(supportRepositoryProvider).create(
+    final result = await ref
+        .read(supportRepositoryProvider)
+        .create(
           uid: uid,
           categoryId: _categoryId ?? 'other',
           subject: _subject.text,
@@ -69,7 +69,8 @@ class _NewTicketSheetState extends ConsumerState<NewTicketSheet> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final categories = ref.watch(ticketCategoriesProvider).valueOrNull ?? const [];
+    final categories =
+        ref.watch(ticketCategoriesProvider).valueOrNull ?? const [];
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -84,8 +85,10 @@ class _NewTicketSheetState extends ConsumerState<NewTicketSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l.supportNewTicket,
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              l.supportNewTicket,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: AppDimens.lg),
             DropdownButtonFormField<String>(
               initialValue: _categoryId,
@@ -95,8 +98,7 @@ class _NewTicketSheetState extends ConsumerState<NewTicketSheet> {
                   DropdownMenuItem(value: c.id, child: Text(c.title)),
               ],
               onChanged: (v) => setState(() => _categoryId = v),
-              validator: (v) =>
-                  v == null ? Validators.notEmpty(null) : null,
+              validator: (v) => v == null ? Validators.notEmpty(null) : null,
             ),
             const SizedBox(height: AppDimens.lg),
             TextFormField(

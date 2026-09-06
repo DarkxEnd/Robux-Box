@@ -26,8 +26,9 @@ class RedemptionRepository {
       .where('isActive', isEqualTo: true)
       .orderBy('sortOrder')
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => Reward.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) => snap.docs.map((d) => Reward.fromMap(d.id, d.data())).toList(),
+      );
 
   /// The user's own requests, newest first. Needs the (uid, createdAt desc)
   /// composite index.
@@ -37,8 +38,10 @@ class RedemptionRepository {
       .orderBy('createdAt', descending: true)
       .limit(50)
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => Redemption.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) =>
+            snap.docs.map((d) => Redemption.fromMap(d.id, d.data())).toList(),
+      );
 
   /// [destination] is a Roblox username for Robux rewards, an email otherwise.
   Future<Result<String>> request({

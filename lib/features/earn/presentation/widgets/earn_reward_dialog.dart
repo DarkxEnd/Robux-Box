@@ -47,8 +47,11 @@ class _EarnRewardDialog extends StatelessWidget {
               gradient: AppTheme.coinGradient,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.monetization_on,
-                size: 46, color: Colors.white),
+            child: const Icon(
+              Icons.monetization_on,
+              size: 46,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: AppDimens.xl),
           Text(
@@ -62,8 +65,9 @@ class _EarnRewardDialog extends StatelessWidget {
           Text(
             subtitle ?? 'Added to your wallet',
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

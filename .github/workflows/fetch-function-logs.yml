@@ -1,0 +1,48 @@
+name: Fetch function logs
+
+# Pulls recent Cloud Functions logs into an artifact. Written because
+# diagnosing an offerwall postback means reading what the provider actually
+# sent — which is how the Lootwalls `status=approved` mismatch was found, since
+# their docs promise a numeric 1.
+on:
+  workflow_dispatch:
+    inputs:
+      function:
+        description: "Function name (blank for all)"
+        required: false
+      lines:
+        description: "How many entries"
+        required: false
+        default: "200"
+
+jobs:
+  logs:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Write service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+
+      - name: Fetch
+        run: |
+          npx firebase-tools@latest functions:log \
+            --project robux-box1 \
+            ${{ github.event.inputs.function && format('--only {0}', github.event.inputs.function) || '' }} \
+            -n "${{ github.event.inputs.lines || 200 }}" > logs.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: function-logs
+          path: logs.txt
+
+      - name: Shred credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"

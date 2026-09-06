@@ -61,10 +61,9 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
       AppToast.error(context, 'Enter your email address first.');
       return;
     }
-    final ok =
-        await ref.read(authControllerProvider.notifier).sendPasswordReset(
-              _email.text,
-            );
+    final ok = await ref
+        .read(authControllerProvider.notifier)
+        .sendPasswordReset(_email.text);
     if (ok && mounted) {
       AppToast.success(context, AppLocalizations.of(context).authResetSent);
     }
@@ -109,8 +108,9 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
               autofillHints: [
                 _register ? AutofillHints.newPassword : AutofillHints.password,
               ],
-              textInputAction:
-                  _register ? TextInputAction.next : TextInputAction.done,
+              textInputAction: _register
+                  ? TextInputAction.next
+                  : TextInputAction.done,
               decoration: InputDecoration(
                 labelText: l.authPassword,
                 prefixIcon: const Icon(Icons.lock_outline),
@@ -134,8 +134,7 @@ class _EmailAuthScreenState extends ConsumerState<EmailAuthScreen> {
                   labelText: l.authConfirmPassword,
                   prefixIcon: const Icon(Icons.lock_outline),
                 ),
-                validator: (v) =>
-                    Validators.confirmPassword(v, _password.text),
+                validator: (v) => Validators.confirmPassword(v, _password.text),
                 onFieldSubmitted: (_) => _submit(),
               ),
             ],

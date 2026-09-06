@@ -24,7 +24,8 @@ class BadgesGrid extends StatelessWidget {
         childAspectRatio: 0.95,
       ),
       itemCount: items.length,
-      itemBuilder: (_, i) => _Badge(view: items[i], onTap: () => onTap(items[i])),
+      itemBuilder: (_, i) =>
+          _Badge(view: items[i], onTap: () => onTap(items[i])),
     );
   }
 }
@@ -103,9 +104,7 @@ class _Badge extends StatelessWidget {
               ),
             ] else
               Text(
-                claimable
-                    ? '+${view.achievement.rewardCoins.compact}'
-                    : '✓',
+                claimable ? '+${view.achievement.rewardCoins.compact}' : '✓',
                 style: TextStyle(
                   color: claimable ? AppTheme.coin : AppTheme.success,
                   fontWeight: FontWeight.w800,

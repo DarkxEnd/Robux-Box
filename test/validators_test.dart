@@ -71,10 +71,11 @@ void main() {
     test('wire values match the server union exactly', () {
       // getOfferwallUrl switches on these strings; a rename here routes the
       // user to the wrong wall or none at all.
-      expect(
-        OfferwallProvider.values.map((p) => p.wire).toList(),
-        ['cpx', 'cpalead', 'lootwalls'],
-      );
+      expect(OfferwallProvider.values.map((p) => p.wire).toList(), [
+        'cpx',
+        'cpalead',
+        'lootwalls',
+      ]);
     });
 
     test('an unknown provider falls back to cpx rather than throwing', () {

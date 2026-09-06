@@ -30,8 +30,11 @@ Future<void> showRedeemSuccess(BuildContext context, Reward reward) async {
                 color: AppTheme.success.withValues(alpha: 0.16),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_rounded,
-                  size: 42, color: AppTheme.success),
+              child: const Icon(
+                Icons.check_rounded,
+                size: 42,
+                color: AppTheme.success,
+              ),
             ),
             const SizedBox(height: AppDimens.xl),
             Text(reward.title, style: theme.textTheme.titleMedium),
@@ -39,8 +42,9 @@ Future<void> showRedeemSuccess(BuildContext context, Reward reward) async {
             Text(
               l.rewardsRequested,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

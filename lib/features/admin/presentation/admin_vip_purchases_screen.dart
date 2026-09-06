@@ -56,9 +56,7 @@ class AdminVipPurchasesScreen extends ConsumerWidget {
                           ),
                           SelectableText(
                             Parse.toStr(purchase['uid']),
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
+                            style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(fontFamily: 'monospace'),
                           ),
                           if (created != null)

@@ -46,7 +46,8 @@ abstract final class AppTypography {
         .apply(bodyColor: color, displayColor: color);
   }
 
-  static TextTheme light(TextTheme base) => _base(base, const Color(0xFF14161C));
+  static TextTheme light(TextTheme base) =>
+      _base(base, const Color(0xFF14161C));
   static TextTheme dark(TextTheme base) => _base(base, const Color(0xFFF4F6FB));
 
   /// Tabular figures for anything that ticks — a counter that reflows on every

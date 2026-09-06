@@ -119,8 +119,11 @@ class RewardCard extends StatelessWidget {
                     const SizedBox(height: AppDimens.xs),
                     Row(
                       children: [
-                        const Icon(Icons.monetization_on,
-                            size: 14, color: AppTheme.coin),
+                        const Icon(
+                          Icons.monetization_on,
+                          size: 14,
+                          color: AppTheme.coin,
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -184,18 +187,18 @@ class _Art extends StatelessWidget {
   }
 
   Widget _fallback() => DecoratedBox(
-        decoration: const BoxDecoration(gradient: AppTheme.brandGradient),
-        child: Center(
-          child: Text(
-            reward.currency == 'RBX'
-                ? '${reward.faceValue.round()}'
-                : '\$${reward.faceValue.round()}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 26,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
+    decoration: const BoxDecoration(gradient: AppTheme.brandGradient),
+    child: Center(
+      child: Text(
+        reward.currency == 'RBX'
+            ? '${reward.faceValue.round()}'
+            : '\$${reward.faceValue.round()}',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 26,
+          fontWeight: FontWeight.w900,
         ),
-      );
+      ),
+    ),
+  );
 }

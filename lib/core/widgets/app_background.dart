@@ -56,13 +56,24 @@ class _GlowPainter extends CustomPainter {
         radius,
         Paint()
           ..shader = RadialGradient(
-            colors: [color.withValues(alpha: alpha), color.withValues(alpha: 0)],
+            colors: [
+              color.withValues(alpha: alpha),
+              color.withValues(alpha: 0),
+            ],
           ).createShader(rect),
       );
     }
 
-    glow(Offset(size.width * 0.15, size.height * 0.08), size.width * 0.7, primary);
-    glow(Offset(size.width * 0.9, size.height * 0.35), size.width * 0.6, secondary);
+    glow(
+      Offset(size.width * 0.15, size.height * 0.08),
+      size.width * 0.7,
+      primary,
+    );
+    glow(
+      Offset(size.width * 0.9, size.height * 0.35),
+      size.width * 0.6,
+      secondary,
+    );
   }
 
   @override

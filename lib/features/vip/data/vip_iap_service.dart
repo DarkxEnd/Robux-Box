@@ -17,7 +17,7 @@ import '../../../core/utils/logger.dart';
 /// not for the store callback.
 class VipIapService {
   VipIapService(this._callables, {InAppPurchase? iap})
-      : _iap = iap ?? InAppPurchase.instance;
+    : _iap = iap ?? InAppPurchase.instance;
 
   final CallableService _callables;
   final InAppPurchase _iap;
@@ -117,8 +117,10 @@ class VipIapService {
           log.w('purchase error: ${p.error?.message}');
           _results.add(
             const Result.failure(
-              OperationFailure('The purchase did not complete.',
-                  code: 'iap-error'),
+              OperationFailure(
+                'The purchase did not complete.',
+                code: 'iap-error',
+              ),
             ),
           );
 

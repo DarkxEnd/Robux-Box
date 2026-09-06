@@ -44,9 +44,9 @@ enum TicketStatus {
   final String wire;
 
   static TicketStatus fromWire(String? v) => TicketStatus.values.firstWhere(
-        (s) => s.wire == v,
-        orElse: () => TicketStatus.open,
-      );
+    (s) => s.wire == v,
+    orElse: () => TicketStatus.open,
+  );
 
   bool get isOpen => this == open || this == awaitingUser;
 }
@@ -114,11 +114,11 @@ class TicketMessage extends Equatable {
   });
 
   factory TicketMessage.fromMap(Map<String, dynamic> map) => TicketMessage(
-        body: Parse.toStr(map['body']),
-        fromAdmin: Parse.toBool(map['fromAdmin']),
-        authorName: map['authorName'] as String?,
-        sentAt: Parse.toDate(map['sentAt']),
-      );
+    body: Parse.toStr(map['body']),
+    fromAdmin: Parse.toBool(map['fromAdmin']),
+    authorName: map['authorName'] as String?,
+    sentAt: Parse.toDate(map['sentAt']),
+  );
 
   final String body;
   final bool fromAdmin;

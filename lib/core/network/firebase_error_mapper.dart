@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,10 +30,7 @@ abstract final class FirebaseErrorMapper {
       );
     }
     if (error is SocketException) {
-      return const NetworkFailure(
-        'No internet connection.',
-        code: 'offline',
-      );
+      return const NetworkFailure('No internet connection.', code: 'offline');
     }
     return const UnexpectedFailure();
   }
@@ -43,22 +39,29 @@ abstract final class FirebaseErrorMapper {
     final message = (e.message ?? '').trim();
     return switch (e.code) {
       'unauthenticated' => AuthFailure(
-          message.isNotEmpty
-              ? message
-              : 'Please sign in to continue. If you are already signed in, '
+        message.isNotEmpty
+            ? message
+            : 'Please sign in to continue. If you are already signed in, '
                   'update the app and try again.',
-          code: e.code,
-        ),
-      'permission-denied' =>
-        PermissionFailure(_orDefault(message, 'You cannot do that.'), code: e.code),
-      'resource-exhausted' || 'failed-precondition' || 'invalid-argument' ||
-      'not-found' || 'deadline-exceeded' || 'already-exists' =>
-        OperationFailure(_orDefault(message, 'That request was rejected.'),
-            code: e.code),
+        code: e.code,
+      ),
+      'permission-denied' => PermissionFailure(
+        _orDefault(message, 'You cannot do that.'),
+        code: e.code,
+      ),
+      'resource-exhausted' ||
+      'failed-precondition' ||
+      'invalid-argument' ||
+      'not-found' ||
+      'deadline-exceeded' ||
+      'already-exists' => OperationFailure(
+        _orDefault(message, 'That request was rejected.'),
+        code: e.code,
+      ),
       'unavailable' => const NetworkFailure(
-          'Service temporarily unavailable. Please try again.',
-          code: 'unavailable',
-        ),
+        'Service temporarily unavailable. Please try again.',
+        code: 'unavailable',
+      ),
       _ => const UnexpectedFailure(),
     };
   }
@@ -67,8 +70,9 @@ abstract final class FirebaseErrorMapper {
     final message = switch (e.code) {
       'invalid-email' => 'That email address is not valid.',
       'user-disabled' => 'This account has been disabled.',
-      'user-not-found' || 'wrong-password' || 'invalid-credential' =>
-        'Incorrect email or password.',
+      'user-not-found' ||
+      'wrong-password' ||
+      'invalid-credential' => 'Incorrect email or password.',
       'email-already-in-use' => 'That email is already registered.',
       'weak-password' => 'Choose a stronger password (at least 6 characters).',
       'requires-recent-login' => 'Please sign in again to continue.',
@@ -85,18 +89,17 @@ abstract final class FirebaseErrorMapper {
   }
 
   static Failure _firestore(FirebaseException e) => switch (e.code) {
-        'permission-denied' => const PermissionFailure(
-            'You do not have access to that.',
-            code: 'permission-denied',
-          ),
-        'unavailable' => const NetworkFailure(
-            'No internet connection.',
-            code: 'unavailable',
-          ),
-        'not-found' =>
-          const OperationFailure('Not found.', code: 'not-found'),
-        _ => const UnexpectedFailure(),
-      };
+    'permission-denied' => const PermissionFailure(
+      'You do not have access to that.',
+      code: 'permission-denied',
+    ),
+    'unavailable' => const NetworkFailure(
+      'No internet connection.',
+      code: 'unavailable',
+    ),
+    'not-found' => const OperationFailure('Not found.', code: 'not-found'),
+    _ => const UnexpectedFailure(),
+  };
 
   static String _orDefault(String value, String fallback) =>
       value.isEmpty ? fallback : value;

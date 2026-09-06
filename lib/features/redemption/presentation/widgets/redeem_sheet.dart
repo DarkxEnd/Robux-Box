@@ -63,10 +63,9 @@ class _RedeemSheetState extends ConsumerState<RedeemSheet> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _busy = true);
 
-    final result = await ref.read(redemptionRepositoryProvider).request(
-          rewardId: widget.reward.id,
-          destination: _destination.text,
-        );
+    final result = await ref
+        .read(redemptionRepositoryProvider)
+        .request(rewardId: widget.reward.id, destination: _destination.text);
     if (!mounted) return;
     setState(() => _busy = false);
 
@@ -104,16 +103,20 @@ class _RedeemSheetState extends ConsumerState<RedeemSheet> {
 
             TextFormField(
               controller: _destination,
-              keyboardType:
-                  _isRobux ? TextInputType.text : TextInputType.emailAddress,
+              keyboardType: _isRobux
+                  ? TextInputType.text
+                  : TextInputType.emailAddress,
               decoration: InputDecoration(
-                labelText:
-                    _isRobux ? l.rewardsRobloxUsername : l.rewardsEmailForCode,
+                labelText: _isRobux
+                    ? l.rewardsRobloxUsername
+                    : l.rewardsEmailForCode,
                 prefixIcon: Icon(
                   _isRobux ? Icons.person_outline : Icons.mail_outline,
                 ),
               ),
-              validator: _isRobux ? Validators.robloxUsername : Validators.email,
+              validator: _isRobux
+                  ? Validators.robloxUsername
+                  : Validators.email,
             ),
 
             const SizedBox(height: AppDimens.lg),
@@ -125,8 +128,11 @@ class _RedeemSheetState extends ConsumerState<RedeemSheet> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.monetization_on,
-                      size: 18, color: AppTheme.coin),
+                  const Icon(
+                    Icons.monetization_on,
+                    size: 18,
+                    color: AppTheme.coin,
+                  ),
                   const SizedBox(width: AppDimens.sm),
                   Expanded(
                     child: Text(

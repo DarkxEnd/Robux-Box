@@ -25,17 +25,17 @@ class AdminUser {
   });
 
   factory AdminUser.fromMap(Map<String, dynamic> map) => AdminUser(
-        uid: (map['uid'] as String?) ?? '',
-        // The callable reads the wallet's `coins` field and returns it under
-        // the same name — not `balance`.
-        coins: (map['coins'] as num?)?.toInt() ?? 0,
-        email: map['email'] as String?,
-        displayName: map['displayName'] as String?,
-        countryCode: map['countryCode'] as String?,
-        vipLevel: (map['vipLevel'] as String?) ?? 'none',
-        status: (map['status'] as String?) ?? 'active',
-        isAdmin: map['isAdmin'] == true,
-      );
+    uid: (map['uid'] as String?) ?? '',
+    // The callable reads the wallet's `coins` field and returns it under
+    // the same name — not `balance`.
+    coins: (map['coins'] as num?)?.toInt() ?? 0,
+    email: map['email'] as String?,
+    displayName: map['displayName'] as String?,
+    countryCode: map['countryCode'] as String?,
+    vipLevel: (map['vipLevel'] as String?) ?? 'none',
+    status: (map['status'] as String?) ?? 'active',
+    isAdmin: map['isAdmin'] == true,
+  );
 
   final String uid;
   final int coins;
@@ -146,9 +146,10 @@ class AdminRepository {
         .orderBy('createdAt', descending: true)
         .limit(100)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => Redemption.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) =>
+              snap.docs.map((d) => Redemption.fromMap(d.id, d.data())).toList(),
+        );
   }
 
   /// [status] is `processing`, `completed` or `rejected`. Rejecting refunds.
@@ -176,10 +177,14 @@ class AdminRepository {
       .collection(FsPaths.rewards)
       .orderBy('sortOrder')
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => Reward.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) => snap.docs.map((d) => Reward.fromMap(d.id, d.data())).toList(),
+      );
 
-  Future<Result<void>> upsertReward(String id, Map<String, dynamic> data) async {
+  Future<Result<void>> upsertReward(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
     try {
       await _db
           .collection(FsPaths.rewards)
@@ -197,8 +202,10 @@ class AdminRepository {
       .collection(FsPaths.promocodes)
       .limit(100)
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => PromoCode.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) =>
+            snap.docs.map((d) => PromoCode.fromMap(d.id, d.data())).toList(),
+      );
 
   Future<Result<void>> upsertPromocode({
     required String code,
@@ -248,9 +255,11 @@ class AdminRepository {
         .orderBy('updatedAt', descending: true)
         .limit(100)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => SupportTicket.fromMap(d.id, d.data()))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((d) => SupportTicket.fromMap(d.id, d.data()))
+              .toList(),
+        );
   }
 
   /// Replies as support. `fromAdmin: true` is only writable with the claim.
@@ -267,7 +276,7 @@ class AdminRepository {
             'fromAdmin': true,
             'authorName': authorName,
             'sentAt': Timestamp.now(),
-          }
+          },
         ]),
         'status': 'awaiting_user',
         'hasUnreadForUser': true,
@@ -296,16 +305,14 @@ class AdminRepository {
       .orderBy('createdAt', descending: true)
       .limit(100)
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+      .map((snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
 
   Stream<List<Map<String, dynamic>>> watchVipPurchases() => _db
       .collection(FsPaths.vipPurchases)
       .orderBy('createdAt', descending: true)
       .limit(100)
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+      .map((snap) => snap.docs.map((d) => {'id': d.id, ...d.data()}).toList());
 }
 
 final adminRepositoryProvider = Provider<AdminRepository>((ref) {

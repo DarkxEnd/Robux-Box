@@ -38,8 +38,8 @@ class GlassCard extends StatelessWidget {
         gradient: gradient,
         color: gradient == null
             ? (isDark
-                ? Colors.white.withValues(alpha: 0.055)
-                : Colors.white.withValues(alpha: 0.85))
+                  ? Colors.white.withValues(alpha: 0.055)
+                  : Colors.white.withValues(alpha: 0.85))
             : null,
         borderRadius: borderRadius,
         border: Border.all(
@@ -62,10 +62,6 @@ class GlassCard extends StatelessWidget {
     }
 
     if (onTap == null) return content;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: borderRadius,
-      child: content,
-    );
+    return InkWell(onTap: onTap, borderRadius: borderRadius, child: content);
   }
 }

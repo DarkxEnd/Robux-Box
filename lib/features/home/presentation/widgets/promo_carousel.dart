@@ -24,10 +24,12 @@ final homeBannersProvider = StreamProvider<List<HomeBanner>>((ref) {
       .where('isActive', isEqualTo: true)
       .orderBy('sortOrder')
       .snapshots()
-      .map((snap) => snap.docs
-          .map((d) => HomeBanner.fromMap(d.id, d.data()))
-          .where((b) => b.isLive)
-          .toList());
+      .map(
+        (snap) => snap.docs
+            .map((d) => HomeBanner.fromMap(d.id, d.data()))
+            .where((b) => b.isLive)
+            .toList(),
+      );
 });
 
 /// An auto-advancing banner carousel.

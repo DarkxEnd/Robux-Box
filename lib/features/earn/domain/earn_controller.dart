@@ -21,9 +21,9 @@ class EarnState {
   bool get busy => status != EarnStatus.idle;
 
   EarnState copyWith({EarnStatus? status, int? adsLeft}) => EarnState(
-        status: status ?? this.status,
-        adsLeft: adsLeft ?? this.adsLeft,
-      );
+    status: status ?? this.status,
+    adsLeft: adsLeft ?? this.adsLeft,
+  );
 }
 
 /// Orchestrates the earning actions.
@@ -65,11 +65,9 @@ class EarnController extends AutoDisposeNotifier<EarnState> {
 
       state = state.copyWith(status: EarnStatus.showingAd);
       final uid = ref.read(currentUidProvider) ?? '';
-      final shown = await ref.read(adsServiceProvider).show(
-            format: format,
-            nonce: session.nonce,
-            uid: uid,
-          );
+      final shown = await ref
+          .read(adsServiceProvider)
+          .show(format: format, nonce: session.nonce, uid: uid);
       if (shown case Err(:final failure)) {
         // The nonce is left to expire on its own; confirming a dismissed ad
         // would ask the server to pay for an impression that never completed.
@@ -120,7 +118,9 @@ class EarnController extends AutoDisposeNotifier<EarnState> {
     }
   }
 
-  Future<Result<int>> _guard(Future<Result<EarnResult>> Function() action) async {
+  Future<Result<int>> _guard(
+    Future<Result<EarnResult>> Function() action,
+  ) async {
     if (state.busy) {
       return const Result.failure(
         OperationFailure('Already in progress.', code: 'busy'),

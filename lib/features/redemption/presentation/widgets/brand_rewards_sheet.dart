@@ -16,12 +16,11 @@ Future<void> showBrandRewardsSheet(
   BuildContext context,
   RewardBrand brand,
   List<Reward> rewards,
-) =>
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => BrandRewardsSheet(brand: brand, rewards: rewards),
-    );
+) => showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => BrandRewardsSheet(brand: brand, rewards: rewards),
+);
 
 /// The cards for one brand.
 class BrandRewardsSheet extends ConsumerWidget {
@@ -99,18 +98,17 @@ class BrandRewardsSheet extends ConsumerWidget {
                     }
                     // Each lock has a different remedy, so each gets its own
                     // message rather than a generic "not available".
-                    AppToast.info(
-                      context,
-                      switch (lock) {
-                        RewardLock.insufficientCoins =>
-                          l.rewardsNeedMore(reward.coinCost - balance),
-                        RewardLock.outOfStock => l.rewardsOutOfStock,
-                        RewardLock.vipRequired =>
-                          l.rewardsVipOnly(reward.minVipLevel.vipLabel),
-                        RewardLock.regionLocked => l.rewardsRegionLocked,
-                        RewardLock.inactive => l.commonComingSoon,
-                      },
-                    );
+                    AppToast.info(context, switch (lock) {
+                      RewardLock.insufficientCoins => l.rewardsNeedMore(
+                        reward.coinCost - balance,
+                      ),
+                      RewardLock.outOfStock => l.rewardsOutOfStock,
+                      RewardLock.vipRequired => l.rewardsVipOnly(
+                        reward.minVipLevel.vipLabel,
+                      ),
+                      RewardLock.regionLocked => l.rewardsRegionLocked,
+                      RewardLock.inactive => l.commonComingSoon,
+                    });
                   },
                 );
               },

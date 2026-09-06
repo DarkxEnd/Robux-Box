@@ -158,7 +158,9 @@ class _Identity extends ConsumerWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.16),
+              backgroundColor: theme.colorScheme.primary.withValues(
+                alpha: 0.16,
+              ),
               backgroundImage: (user.photoUrl?.isNotEmpty ?? false)
                   ? CachedNetworkImageProvider(user.photoUrl!)
                   : null,
@@ -261,11 +263,7 @@ class _Stats extends ConsumerWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+  const _Stat({required this.label, required this.value, required this.color});
 
   final String label;
   final String value;

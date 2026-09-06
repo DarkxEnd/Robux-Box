@@ -34,11 +34,8 @@ class AnimatedCounter extends StatelessWidget {
       tween: IntTween(begin: value, end: value),
       duration: duration,
       curve: Curves.easeOutCubic,
-      builder: (context, v, _) => Text(
-        '$prefix${v.grouped}$suffix',
-        style: effective,
-        maxLines: 1,
-      ),
+      builder: (context, v, _) =>
+          Text('$prefix${v.grouped}$suffix', style: effective, maxLines: 1),
     );
   }
 }
@@ -64,7 +61,8 @@ class CoinAmount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final positive = coins >= 0;
-    final tint = color ??
+    final tint =
+        color ??
         (signed
             ? (positive ? const Color(0xFF2FD07A) : const Color(0xFFFF5A5F))
             : const Color(0xFFFFC94A));

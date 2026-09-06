@@ -64,8 +64,9 @@ class WelcomeScreen extends ConsumerWidget {
                   label: l.welcomeContinueGoogle,
                   icon: const GoogleLogo(),
                   busy: state.busy,
-                  onPressed: () =>
-                      ref.read(authControllerProvider.notifier).signInWithGoogle(),
+                  onPressed: () => ref
+                      .read(authControllerProvider.notifier)
+                      .signInWithGoogle(),
                 ),
                 const SizedBox(height: AppDimens.md),
                 SocialAuthButton(
@@ -129,7 +130,10 @@ class _Legal extends ConsumerWidget {
               onPressed: () => open(config.termsUrl),
               child: const Text('Terms', style: TextStyle(fontSize: 12)),
             ),
-            Text('·', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
+            Text(
+              '·',
+              style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
+            ),
             TextButton(
               onPressed: () => open(config.privacyUrl),
               child: const Text('Privacy', style: TextStyle(fontSize: 12)),

@@ -248,10 +248,8 @@ void main() {
     });
 
     test('sign carries the direction', () {
-      final credit =
-          AppTransaction.fromMap('t1', {'uid': 'u', 'coins': 50});
-      final debit =
-          AppTransaction.fromMap('t2', {'uid': 'u', 'coins': -50});
+      final credit = AppTransaction.fromMap('t1', {'uid': 'u', 'coins': 50});
+      final debit = AppTransaction.fromMap('t2', {'uid': 'u', 'coins': -50});
       expect(credit.isCredit, isTrue);
       expect(debit.isDebit, isTrue);
     });

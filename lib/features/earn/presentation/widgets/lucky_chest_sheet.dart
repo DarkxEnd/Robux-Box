@@ -12,12 +12,11 @@ import '../../../../core/widgets/gradient_button.dart';
 import '../../domain/earn_controller.dart';
 import 'earn_reward_dialog.dart';
 
-Future<void> showLuckyChestSheet(BuildContext context) =>
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => const LuckyChestSheet(),
-    );
+Future<void> showLuckyChestSheet(BuildContext context) => showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => const LuckyChestSheet(),
+);
 
 /// The daily chest. Same contract as the wheel: the server picks, the
 /// animation reports.
@@ -51,25 +50,28 @@ class _LuckyChestSheetState extends ConsumerState<LuckyChestSheet>
     // is part of the moment rather than a frozen screen.
     unawaited(_shake.repeat(reverse: true));
 
-    final result =
-        await ref.read(earnControllerProvider.notifier).playGame('chest');
+    final result = await ref
+        .read(earnControllerProvider.notifier)
+        .playGame('chest');
     _shake
       ..stop()
       ..reset();
     if (!mounted) return;
 
-    unawaited(result.when(
-      success: (earn) async {
-        await ref.read(soundServiceProvider).celebrate();
-        if (!mounted) return;
-        Navigator.of(context).pop();
-        await showEarnRewardDialog(context, coins: earn.coins);
-      },
-      failure: (f) async {
-        AppToast.failure(context, f);
-        Navigator.of(context).pop();
-      },
-    ));
+    unawaited(
+      result.when(
+        success: (earn) async {
+          await ref.read(soundServiceProvider).celebrate();
+          if (!mounted) return;
+          Navigator.of(context).pop();
+          await showEarnRewardDialog(context, coins: earn.coins);
+        },
+        failure: (f) async {
+          AppToast.failure(context, f);
+          Navigator.of(context).pop();
+        },
+      ),
+    );
 
     if (mounted) setState(() => _opening = false);
   }
@@ -103,8 +105,11 @@ class _LuckyChestSheetState extends ConsumerState<LuckyChestSheet>
                 gradient: AppTheme.coinGradient,
                 borderRadius: BorderRadius.circular(28),
               ),
-              child: const Icon(Icons.card_giftcard,
-                  size: 74, color: Colors.white),
+              child: const Icon(
+                Icons.card_giftcard,
+                size: 74,
+                color: Colors.white,
+              ),
             ),
           ),
           const SizedBox(height: AppDimens.xxl),

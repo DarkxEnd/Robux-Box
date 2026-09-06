@@ -24,8 +24,8 @@ class WalletScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
-    final wallet = ref.watch(walletProvider).valueOrNull ??
-        const Wallet.empty('');
+    final wallet =
+        ref.watch(walletProvider).valueOrNull ?? const Wallet.empty('');
     final transactions = ref.watch(transactionsProvider);
     final pending = ref.watch(pendingRedemptionCoinsProvider);
 
@@ -46,14 +46,19 @@ class WalletScreen extends ConsumerWidget {
             child: GlassCard(
               child: Column(
                 children: [
-                  Text(l.homeBalance,
-                      style: Theme.of(context).textTheme.bodySmall),
+                  Text(
+                    l.homeBalance,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   const SizedBox(height: AppDimens.sm),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.monetization_on,
-                          color: AppTheme.coin, size: 28),
+                      const Icon(
+                        Icons.monetization_on,
+                        color: AppTheme.coin,
+                        size: 28,
+                      ),
                       const SizedBox(width: AppDimens.sm),
                       AnimatedCounter(value: wallet.balance),
                     ],
@@ -124,11 +129,7 @@ class WalletScreen extends ConsumerWidget {
 }
 
 class _Stat extends StatelessWidget {
-  const _Stat({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
+  const _Stat({required this.label, required this.value, required this.color});
 
   final String label;
   final int value;
@@ -162,22 +163,22 @@ class _TransactionTile extends StatelessWidget {
   final AppTransaction transaction;
 
   IconData get _icon => switch (transaction.type) {
-        TxType.rewardedAd || TxType.rewardedInterstitial =>
-          Icons.play_circle_outline,
-        TxType.offerwall => Icons.task_alt,
-        TxType.offerwallReversal => Icons.undo,
-        TxType.dailyReward || TxType.dailyStreak => Icons.calendar_today,
-        TxType.spin => Icons.casino,
-        TxType.chest => Icons.card_giftcard,
-        TxType.referralBonus || TxType.referralShare => Icons.group_add,
-        TxType.achievement => Icons.military_tech,
-        TxType.vipDailyBonus || TxType.vipPurchase => Icons.workspace_premium,
-        TxType.redemption => Icons.redeem,
-        TxType.redemptionRefund => Icons.replay,
-        TxType.rateApp => Icons.star,
-        TxType.adminAdjustment => Icons.admin_panel_settings,
-        TxType.other => Icons.swap_horiz,
-      };
+    TxType.rewardedAd ||
+    TxType.rewardedInterstitial => Icons.play_circle_outline,
+    TxType.offerwall => Icons.task_alt,
+    TxType.offerwallReversal => Icons.undo,
+    TxType.dailyReward || TxType.dailyStreak => Icons.calendar_today,
+    TxType.spin => Icons.casino,
+    TxType.chest => Icons.card_giftcard,
+    TxType.referralBonus || TxType.referralShare => Icons.group_add,
+    TxType.achievement => Icons.military_tech,
+    TxType.vipDailyBonus || TxType.vipPurchase => Icons.workspace_premium,
+    TxType.redemption => Icons.redeem,
+    TxType.redemptionRefund => Icons.replay,
+    TxType.rateApp => Icons.star,
+    TxType.adminAdjustment => Icons.admin_panel_settings,
+    TxType.other => Icons.swap_horiz,
+  };
 
   String _label(AppLocalizations l) {
     final description = transaction.description;

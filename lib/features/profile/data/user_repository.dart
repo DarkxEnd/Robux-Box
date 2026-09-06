@@ -24,16 +24,14 @@ class UserRepository {
       _db.collection(FsPaths.users).doc(uid);
 
   Stream<AppUser?> watch(String uid) => _doc(uid).snapshots().map(
-        (snap) => snap.exists ? AppUser.fromMap(uid, snap.data()!) : null,
-      );
+    (snap) => snap.exists ? AppUser.fromMap(uid, snap.data()!) : null,
+  );
 
   Future<Result<AppUser>> load(String uid) async {
     try {
       final snap = await _doc(uid).get();
       if (!snap.exists) {
-        return const Result.failure(
-          OperationFailureNotFound(),
-        );
+        return const Result.failure(OperationFailureNotFound());
       }
       return Result.success(AppUser.fromMap(uid, snap.data()!));
     } on Object catch (e, s) {
@@ -89,10 +87,10 @@ class UserRepository {
 /// `onUserCreate` trigger has not finished yet on a brand-new account.
 class OperationFailureNotFound extends OperationFailure {
   const OperationFailureNotFound()
-      : super(
-          'Setting up your account… pull to refresh in a moment.',
-          code: 'profile-not-ready',
-        );
+    : super(
+        'Setting up your account… pull to refresh in a moment.',
+        code: 'profile-not-ready',
+      );
 }
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {

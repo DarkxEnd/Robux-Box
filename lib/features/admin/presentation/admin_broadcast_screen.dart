@@ -62,7 +62,9 @@ class _AdminBroadcastScreenState extends ConsumerState<AdminBroadcastScreen> {
     if (confirmed != true || !mounted) return;
 
     setState(() => _busy = true);
-    final result = await ref.read(adminRepositoryProvider).broadcast(
+    final result = await ref
+        .read(adminRepositoryProvider)
+        .broadcast(
           title: _title.text,
           body: _body.text,
           audience: _audience,

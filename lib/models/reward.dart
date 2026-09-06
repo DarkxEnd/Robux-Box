@@ -16,9 +16,9 @@ enum RewardKind {
   final String wire;
 
   static RewardKind fromWire(String? v) => RewardKind.values.firstWhere(
-        (k) => k.wire == v,
-        orElse: () => RewardKind.giftCard,
-      );
+    (k) => k.wire == v,
+    orElse: () => RewardKind.giftCard,
+  );
 }
 
 /// A catalogue entry (`rewards/{id}`), seeded by `scripts/seed.js` and edited
@@ -43,22 +43,22 @@ class Reward extends Equatable {
   });
 
   factory Reward.fromMap(String id, Map<String, dynamic> map) => Reward(
-        id: id,
-        kind: RewardKind.fromWire(map['kind'] as String?),
-        title: Parse.toStr(map['title']),
-        coinCost: Parse.toInt(map['coinCost']),
-        subtitle: Parse.toStr(map['subtitle']),
-        faceValue: Parse.toDouble(map['faceValue']),
-        currency: Parse.toStr(map['currency'], 'RBX'),
-        provider: Parse.toStr(map['provider'], 'manual'),
-        imageUrl: Parse.toStr(map['imageUrl']),
-        badge: Parse.toStr(map['badge']),
-        isActive: Parse.toBool(map['isActive'], true),
-        sortOrder: Parse.toInt(map['sortOrder']),
-        stock: Parse.toInt(map['stock'], -1),
-        minVipLevel: Parse.toStr(map['minVipLevel'], 'none'),
-        allowedCountries: Parse.toStringList(map['allowedCountries']),
-      );
+    id: id,
+    kind: RewardKind.fromWire(map['kind'] as String?),
+    title: Parse.toStr(map['title']),
+    coinCost: Parse.toInt(map['coinCost']),
+    subtitle: Parse.toStr(map['subtitle']),
+    faceValue: Parse.toDouble(map['faceValue']),
+    currency: Parse.toStr(map['currency'], 'RBX'),
+    provider: Parse.toStr(map['provider'], 'manual'),
+    imageUrl: Parse.toStr(map['imageUrl']),
+    badge: Parse.toStr(map['badge']),
+    isActive: Parse.toBool(map['isActive'], true),
+    sortOrder: Parse.toInt(map['sortOrder']),
+    stock: Parse.toInt(map['stock'], -1),
+    minVipLevel: Parse.toStr(map['minVipLevel'], 'none'),
+    allowedCountries: Parse.toStringList(map['allowedCountries']),
+  );
 
   final String id;
   final RewardKind kind;
@@ -119,9 +119,9 @@ class Reward extends Equatable {
   /// directory layout matches the shipped bundle, so ids that had art before
   /// still resolve.
   String get assetFallback => switch (kind) {
-        RewardKind.robux => 'assets/images/robux_packages/$id.png',
-        _ => 'assets/images/redeem_brand_cards/$id.png',
-      };
+    RewardKind.robux => 'assets/images/robux_packages/$id.png',
+    _ => 'assets/images/redeem_brand_cards/$id.png',
+  };
 
   @override
   List<Object?> get props => [id, kind, title, coinCost, isActive, stock];

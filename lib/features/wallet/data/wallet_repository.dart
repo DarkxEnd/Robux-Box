@@ -28,7 +28,9 @@ class WalletRepository {
       .snapshots()
       // A missing wallet is a new account whose trigger has not run yet, not
       // an error — showing zero is correct and lets the UI render.
-      .map((s) => s.exists ? Wallet.fromMap(uid, s.data()!) : Wallet.empty(uid));
+      .map(
+        (s) => s.exists ? Wallet.fromMap(uid, s.data()!) : Wallet.empty(uid),
+      );
 
   /// Transaction history, newest first.
   ///
@@ -37,16 +39,17 @@ class WalletRepository {
   Stream<List<AppTransaction>> watchTransactions(
     String uid, {
     int limit = AppConstants.transactionsPageSize,
-  }) =>
-      _db
-          .collection(FsPaths.transactions)
-          .where('uid', isEqualTo: uid)
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .snapshots()
-          .map((snap) => snap.docs
-              .map((d) => AppTransaction.fromMap(d.id, d.data()))
-              .toList());
+  }) => _db
+      .collection(FsPaths.transactions)
+      .where('uid', isEqualTo: uid)
+      .orderBy('createdAt', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map(
+        (snap) => snap.docs
+            .map((d) => AppTransaction.fromMap(d.id, d.data()))
+            .toList(),
+      );
 
   /// Older pages, keyed on the last document already shown.
   Future<Result<List<AppTransaction>>> loadMore({
@@ -75,19 +78,16 @@ class WalletRepository {
   /// Used when the direct query is refused — a rules change or a missing index
   /// makes the collection unreadable, and the callable still works because it
   /// runs with admin privileges.
-  Future<Result<List<AppTransaction>>> recentViaCallable({int limit = 25}) async {
+  Future<Result<List<AppTransaction>>> recentViaCallable({
+    int limit = 25,
+  }) async {
     final res = await _callables.call('recentTransactions', {'limit': limit});
     return res.map((data) {
       final items = data['transactions'] as List<dynamic>? ?? const [];
-      return items
-          .map((e) {
-            final map = Map<String, dynamic>.from(e as Map);
-            return AppTransaction.fromMap(
-              (map['id'] as String?) ?? '',
-              map,
-            );
-          })
-          .toList();
+      return items.map((e) {
+        final map = Map<String, dynamic>.from(e as Map);
+        return AppTransaction.fromMap((map['id'] as String?) ?? '', map);
+      }).toList();
     });
   }
 }

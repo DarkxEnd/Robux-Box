@@ -72,10 +72,8 @@ class LeaderboardScreen extends ConsumerWidget {
                   itemCount: list.length,
                   separatorBuilder: (_, __) =>
                       const SizedBox(height: AppDimens.sm),
-                  itemBuilder: (_, i) => _Row(
-                    entry: list[i],
-                    isMe: list[i].uid == uid,
-                  ),
+                  itemBuilder: (_, i) =>
+                      _Row(entry: list[i], isMe: list[i].uid == uid),
                 );
               },
             ),
@@ -103,11 +101,11 @@ class _Row extends StatelessWidget {
   final bool isMe;
 
   Color? get _medal => switch (entry.rank) {
-        1 => const Color(0xFFFFD54F),
-        2 => const Color(0xFFCFD8DC),
-        3 => const Color(0xFFCD7F32),
-        _ => null,
-      };
+    1 => const Color(0xFFFFD54F),
+    2 => const Color(0xFFCFD8DC),
+    3 => const Color(0xFFCD7F32),
+    _ => null,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -139,8 +137,7 @@ class _Row extends StatelessWidget {
           const SizedBox(width: AppDimens.sm),
           CircleAvatar(
             radius: 17,
-            backgroundColor:
-                theme.colorScheme.primary.withValues(alpha: 0.16),
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.16),
             backgroundImage: (entry.photoUrl?.isNotEmpty ?? false)
                 ? CachedNetworkImageProvider(entry.photoUrl!)
                 : null,
@@ -176,8 +173,7 @@ class _Row extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.monetization_on,
-                  size: 14, color: AppTheme.coin),
+              const Icon(Icons.monetization_on, size: 14, color: AppTheme.coin),
               const SizedBox(width: 3),
               Text(
                 entry.coins.compact,

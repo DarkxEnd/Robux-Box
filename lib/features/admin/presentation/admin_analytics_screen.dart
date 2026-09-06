@@ -104,15 +104,14 @@ class _Metric extends StatelessWidget {
             ),
             const SizedBox(width: AppDimens.lg),
             Expanded(
-              child: Text(label,
-                  style: Theme.of(context).textTheme.bodyMedium),
+              child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
             ),
             Text(
               value,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: color,
-                  ),
+                fontWeight: FontWeight.w800,
+                color: color,
+              ),
             ),
           ],
         ),

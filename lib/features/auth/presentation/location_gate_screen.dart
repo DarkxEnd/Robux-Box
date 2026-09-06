@@ -38,11 +38,7 @@ class LocationGateScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.public,
-                  size: 72,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(Icons.public, size: 72, color: theme.colorScheme.primary),
                 const SizedBox(height: AppDimens.xl),
                 Text(
                   l.locationRequiredTitle,
@@ -53,8 +49,9 @@ class LocationGateScreen extends ConsumerWidget {
                 Text(
                   l.locationRequiredBody,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: AppDimens.xxl),
                 GradientButton(
@@ -67,10 +64,7 @@ class LocationGateScreen extends ConsumerWidget {
                   },
                 ),
                 const SizedBox(height: AppDimens.sm),
-                TextButton(
-                  onPressed: proceed,
-                  child: Text(l.locationSkip),
-                ),
+                TextButton(onPressed: proceed, child: Text(l.locationSkip)),
               ],
             ),
           ),

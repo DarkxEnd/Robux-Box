@@ -9,17 +9,17 @@ import '../../../../core/widgets/status_pill.dart';
 import '../../../../models/support_ticket.dart';
 import '../../data/support_repository.dart';
 
-Future<void> showTicketThreadSheet(BuildContext context, SupportTicket ticket) =>
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: TicketThreadSheet(ticket: ticket),
-      ),
-    );
+Future<void> showTicketThreadSheet(
+  BuildContext context,
+  SupportTicket ticket,
+) => showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  builder: (context) => Padding(
+    padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+    child: TicketThreadSheet(ticket: ticket),
+  ),
+);
 
 /// The conversation on one ticket.
 class TicketThreadSheet extends ConsumerStatefulWidget {
@@ -46,10 +46,9 @@ class _TicketThreadSheetState extends ConsumerState<TicketThreadSheet> {
     if (text.isEmpty) return;
 
     setState(() => _busy = true);
-    final result = await ref.read(supportRepositoryProvider).reply(
-          ticketId: widget.ticket.id,
-          body: text,
-        );
+    final result = await ref
+        .read(supportRepositoryProvider)
+        .reply(ticketId: widget.ticket.id, body: text);
     if (!mounted) return;
     setState(() => _busy = false);
 
@@ -100,7 +99,9 @@ class _TicketThreadSheetState extends ConsumerState<TicketThreadSheet> {
                   ),
                 ),
                 StatusPill(
-                  label: ticket.status.isOpen ? l.supportOpen : l.supportResolved,
+                  label: ticket.status.isOpen
+                      ? l.supportOpen
+                      : l.supportResolved,
                   color: ticket.status.isOpen
                       ? theme.colorScheme.primary
                       : Colors.grey,
@@ -154,8 +155,9 @@ class _Bubble extends StatelessWidget {
     final fromAdmin = message.fromAdmin;
 
     return Align(
-      alignment:
-          fromAdmin ? AlignmentDirectional.centerStart : AlignmentDirectional.centerEnd,
+      alignment: fromAdmin
+          ? AlignmentDirectional.centerStart
+          : AlignmentDirectional.centerEnd,
       child: Container(
         margin: const EdgeInsets.only(bottom: AppDimens.sm),
         padding: const EdgeInsets.all(AppDimens.md),

@@ -34,10 +34,7 @@ class AdminGate extends ConsumerWidget {
       data: (allowed) {
         if (!allowed) {
           return const AppScaffold(
-            body: EmptyView(
-              icon: Icons.block_outlined,
-              title: 'Admins only.',
-            ),
+            body: EmptyView(icon: Icons.block_outlined, title: 'Admins only.'),
           );
         }
         return AppScaffold(title: title, body: child);

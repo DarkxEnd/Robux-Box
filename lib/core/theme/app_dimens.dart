@@ -27,8 +27,9 @@ abstract final class AppDimens {
   static const BorderRadius brMd = BorderRadius.all(Radius.circular(radiusMd));
   static const BorderRadius brLg = BorderRadius.all(Radius.circular(radiusLg));
   static const BorderRadius brXl = BorderRadius.all(Radius.circular(radiusXl));
-  static const BorderRadius brPill =
-      BorderRadius.all(Radius.circular(radiusPill));
+  static const BorderRadius brPill = BorderRadius.all(
+    Radius.circular(radiusPill),
+  );
 
   /// Google's minimum touch target. Anything tappable must reach this, or the
   /// accessibility scanner in Play Console flags the build.
@@ -44,8 +45,9 @@ abstract final class AppDimens {
 
   /// Bottom padding that clears the nav bar so the last list item is never
   /// hidden behind it.
-  static const EdgeInsets listBottomPadding =
-      EdgeInsets.only(bottom: navBarHeight + xl);
+  static const EdgeInsets listBottomPadding = EdgeInsets.only(
+    bottom: navBarHeight + xl,
+  );
 
   // Motion. Kept short — this app is used in 20-second bursts and slow
   // transitions read as lag.

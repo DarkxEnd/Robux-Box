@@ -46,8 +46,9 @@ class _OfferwallScreenState extends ConsumerState<OfferwallScreen> {
       _failure = null;
     });
 
-    final result =
-        await ref.read(offerwallServiceProvider).urlFor(widget.provider);
+    final result = await ref
+        .read(offerwallServiceProvider)
+        .urlFor(widget.provider);
     if (!mounted) return;
 
     result.when(
@@ -137,10 +138,7 @@ class _OfferwallScreenState extends ConsumerState<OfferwallScreen> {
                 )
               : null,
           actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _load,
-            ),
+            IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
           ],
         ),
         body: SafeArea(
@@ -151,9 +149,7 @@ class _OfferwallScreenState extends ConsumerState<OfferwallScreen> {
               else if (controller != null)
                 WebViewWidget(controller: controller),
               if (_loading && _failure == null)
-                const Center(
-                  child: PremiumLoader(message: 'Opening offers…'),
-                ),
+                const Center(child: PremiumLoader(message: 'Opening offers…')),
             ],
           ),
         ),
@@ -179,8 +175,11 @@ class _NoReversalNotice extends StatelessWidget {
         padding: const EdgeInsets.all(AppDimens.md),
         child: Row(
           children: [
-            Icon(Icons.info_outline,
-                size: 15, color: theme.colorScheme.onSurfaceVariant),
+            Icon(
+              Icons.info_outline,
+              size: 15,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
             const SizedBox(width: AppDimens.sm),
             Expanded(
               child: Text(

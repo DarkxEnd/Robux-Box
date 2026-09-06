@@ -95,12 +95,42 @@ abstract final class Routes {
       _all.contains(path) || _all.any((r) => path.startsWith('$r/'));
 
   static const _all = {
-    splash, welcome, onboarding, auth, authEmail, authPhone, locationRequired,
-    home, earn, offerwall, offerwallCpalead, offerwallLootwalls, tasks,
-    rewards, redemptions, wallet, profile, settings, support, notifications,
-    messages, leaderboard, achievements, referrals, vip, admin, adminUsers,
-    adminRedemptions, adminRewards, adminPromocodes, adminBroadcast,
-    adminAnalytics, adminTickets, adminReports, adminVipPurchases, adminAdmins,
+    splash,
+    welcome,
+    onboarding,
+    auth,
+    authEmail,
+    authPhone,
+    locationRequired,
+    home,
+    earn,
+    offerwall,
+    offerwallCpalead,
+    offerwallLootwalls,
+    tasks,
+    rewards,
+    redemptions,
+    wallet,
+    profile,
+    settings,
+    support,
+    notifications,
+    messages,
+    leaderboard,
+    achievements,
+    referrals,
+    vip,
+    admin,
+    adminUsers,
+    adminRedemptions,
+    adminRewards,
+    adminPromocodes,
+    adminBroadcast,
+    adminAnalytics,
+    adminTickets,
+    adminReports,
+    adminVipPurchases,
+    adminAdmins,
   };
 }
 
@@ -122,7 +152,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: false,
 
     redirect: (context, state) {
-      final loggingIn = state.matchedLocation.startsWith('/auth') ||
+      final loggingIn =
+          state.matchedLocation.startsWith('/auth') ||
           state.matchedLocation == Routes.welcome ||
           state.matchedLocation == Routes.onboarding;
 
@@ -140,10 +171,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
 
     routes: [
-      GoRoute(
-        path: Routes.splash,
-        builder: (_, __) => const SplashScreen(),
-      ),
+      GoRoute(path: Routes.splash, builder: (_, __) => const SplashScreen()),
 
       // Auth flow — outside the shell, so no navigation bar.
       GoRoute(path: Routes.welcome, builder: (_, __) => const WelcomeScreen()),
@@ -151,10 +179,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.onboarding,
         builder: (_, __) => const OnboardingScreen(),
       ),
-      GoRoute(
-        path: Routes.auth,
-        redirect: (_, __) => Routes.welcome,
-      ),
+      GoRoute(path: Routes.auth, redirect: (_, __) => Routes.welcome),
       GoRoute(
         path: Routes.authEmail,
         builder: (_, __) => const EmailAuthScreen(),
@@ -226,10 +251,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       // `/messages` is an older deeplink for the same screen; kept so pushes
       // already sent with it still land somewhere sensible.
-      GoRoute(
-        path: Routes.messages,
-        redirect: (_, __) => Routes.notifications,
-      ),
+      GoRoute(path: Routes.messages, redirect: (_, __) => Routes.notifications),
       GoRoute(
         path: Routes.leaderboard,
         builder: (_, __) => const LeaderboardScreen(),

@@ -18,15 +18,22 @@ class AdminDashboardScreen extends ConsumerWidget {
 
     final tiles = <(IconData, String, String)>[
       (Icons.people_outline, l.adminUsers, Routes.adminUsers),
-      (Icons.receipt_long_outlined, l.adminRedemptions, Routes.adminRedemptions),
+      (
+        Icons.receipt_long_outlined,
+        l.adminRedemptions,
+        Routes.adminRedemptions,
+      ),
       (Icons.card_giftcard_outlined, l.adminRewards, Routes.adminRewards),
       (Icons.local_offer_outlined, l.adminPromocodes, Routes.adminPromocodes),
       (Icons.campaign_outlined, l.adminBroadcast, Routes.adminBroadcast),
       (Icons.analytics_outlined, l.adminAnalytics, Routes.adminAnalytics),
       (Icons.support_agent_outlined, l.adminTickets, Routes.adminTickets),
       (Icons.flag_outlined, l.adminReports, Routes.adminReports),
-      (Icons.workspace_premium_outlined, l.adminVipPurchases,
-          Routes.adminVipPurchases),
+      (
+        Icons.workspace_premium_outlined,
+        l.adminVipPurchases,
+        Routes.adminVipPurchases,
+      ),
       (Icons.shield_outlined, l.adminManageAdmins, Routes.adminAdmins),
     ];
 
@@ -48,8 +55,11 @@ class AdminDashboardScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 28,
-                    color: Theme.of(context).colorScheme.primary),
+                Icon(
+                  icon,
+                  size: 28,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const SizedBox(height: AppDimens.sm),
                 Text(
                   label,

@@ -21,8 +21,9 @@ class OffersRepository {
       .orderBy('sortOrder')
       .limit(60)
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => Offer.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) => snap.docs.map((d) => Offer.fromMap(d.id, d.data())).toList(),
+      );
 }
 
 final offersRepositoryProvider = Provider<OffersRepository>((ref) {

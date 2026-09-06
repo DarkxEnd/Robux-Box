@@ -26,11 +26,14 @@ class AuthState {
   final bool busy;
   final Failure? failure;
 
-  AuthState copyWith({bool? busy, Failure? failure, bool clearFailure = false}) =>
-      AuthState(
-        busy: busy ?? this.busy,
-        failure: clearFailure ? null : (failure ?? this.failure),
-      );
+  AuthState copyWith({
+    bool? busy,
+    Failure? failure,
+    bool clearFailure = false,
+  }) => AuthState(
+    busy: busy ?? this.busy,
+    failure: clearFailure ? null : (failure ?? this.failure),
+  );
 }
 
 class AuthController extends AutoDisposeNotifier<AuthState> {
@@ -39,8 +42,7 @@ class AuthController extends AutoDisposeNotifier<AuthState> {
 
   AuthRepository get _repo => ref.read(authRepositoryProvider);
 
-  Future<bool> signInWithGoogle() =>
-      _run(() => _repo.signInWithGoogle());
+  Future<bool> signInWithGoogle() => _run(() => _repo.signInWithGoogle());
 
   Future<bool> signInWithEmail(String email, String password) =>
       _run(() => _repo.signInWithEmail(email, password));

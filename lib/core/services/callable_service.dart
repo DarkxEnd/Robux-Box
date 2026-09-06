@@ -54,17 +54,19 @@ class CallableService {
   /// assignable to `Map<String, dynamic>`. Casting directly throws at runtime;
   /// rebuilding the map does not.
   static Map<String, dynamic> _asMap(Object? raw) => switch (raw) {
-        final Map<Object?, Object?> m =>
-          m.map((k, v) => MapEntry(k.toString(), _deep(v))),
-        _ => <String, dynamic>{},
-      };
+    final Map<Object?, Object?> m => m.map(
+      (k, v) => MapEntry(k.toString(), _deep(v)),
+    ),
+    _ => <String, dynamic>{},
+  };
 
   static Object? _deep(Object? v) => switch (v) {
-        final Map<Object?, Object?> m =>
-          m.map((k, val) => MapEntry(k.toString(), _deep(val))),
-        final List<Object?> l => l.map(_deep).toList(),
-        _ => v,
-      };
+    final Map<Object?, Object?> m => m.map(
+      (k, val) => MapEntry(k.toString(), _deep(val)),
+    ),
+    final List<Object?> l => l.map(_deep).toList(),
+    _ => v,
+  };
 }
 
 /// Raised by services that need a `Failure` where no call was even attempted.

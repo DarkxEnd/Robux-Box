@@ -100,8 +100,8 @@ class ReferralsScreen extends ConsumerWidget {
                 const Divider(height: AppDimens.xl),
                 _Reward(
                   icon: Icons.percent,
-                  label: '${(AppConstants.referralRevenueSharePercent * 100)
-                      .round()}% lifetime',
+                  label:
+                      '${(AppConstants.referralRevenueSharePercent * 100).round()}% lifetime',
                   coins: null,
                 ),
               ],

@@ -34,31 +34,31 @@ class AppUser extends Equatable {
   });
 
   factory AppUser.fromMap(String uid, Map<String, dynamic> map) => AppUser(
-        uid: uid,
-        email: map['email'] as String?,
-        displayName: map['displayName'] as String?,
-        photoUrl: map['photoUrl'] as String?,
-        phoneNumber: map['phoneNumber'] as String?,
-        robloxUsername: map['robloxUsername'] as String?,
-        countryCode: map['countryCode'] as String?,
-        status: Parse.toStr(map['status'], 'active'),
-        vipLevel: Parse.toStr(map['vipLevel'], 'none'),
-        vipExpiresAt: Parse.toDate(map['vipExpiresAt']),
-        xp: Parse.toInt(map['xp']),
-        level: Parse.toInt(map['level']),
-        dailyStreak: Parse.toInt(map['dailyStreak']),
-        adsWatchedToday: Parse.toInt(map['adsWatchedToday']),
-        lastAdAt: Parse.toDate(map['lastAdAt']),
-        lastDailyRewardAt: Parse.toDate(map['lastDailyRewardAt']),
-        lastVipBonusAt: Parse.toDate(map['lastVipBonusAt']),
-        lastSpinAt: Parse.toDate(map['lastSpinAt']),
-        lastChestAt: Parse.toDate(map['lastChestAt']),
-        referralCode: map['referralCode'] as String?,
-        referredBy: map['referredBy'] as String?,
-        isAdmin: Parse.toBool(map['isAdmin']),
-        rateAppRewardClaimed: Parse.toBool(map['rateAppRewardClaimed']),
-        createdAt: Parse.toDate(map['createdAt']),
-      );
+    uid: uid,
+    email: map['email'] as String?,
+    displayName: map['displayName'] as String?,
+    photoUrl: map['photoUrl'] as String?,
+    phoneNumber: map['phoneNumber'] as String?,
+    robloxUsername: map['robloxUsername'] as String?,
+    countryCode: map['countryCode'] as String?,
+    status: Parse.toStr(map['status'], 'active'),
+    vipLevel: Parse.toStr(map['vipLevel'], 'none'),
+    vipExpiresAt: Parse.toDate(map['vipExpiresAt']),
+    xp: Parse.toInt(map['xp']),
+    level: Parse.toInt(map['level']),
+    dailyStreak: Parse.toInt(map['dailyStreak']),
+    adsWatchedToday: Parse.toInt(map['adsWatchedToday']),
+    lastAdAt: Parse.toDate(map['lastAdAt']),
+    lastDailyRewardAt: Parse.toDate(map['lastDailyRewardAt']),
+    lastVipBonusAt: Parse.toDate(map['lastVipBonusAt']),
+    lastSpinAt: Parse.toDate(map['lastSpinAt']),
+    lastChestAt: Parse.toDate(map['lastChestAt']),
+    referralCode: map['referralCode'] as String?,
+    referredBy: map['referredBy'] as String?,
+    isAdmin: Parse.toBool(map['isAdmin']),
+    rateAppRewardClaimed: Parse.toBool(map['rateAppRewardClaimed']),
+    createdAt: Parse.toDate(map['createdAt']),
+  );
 
   final String uid;
   final String? email;
@@ -140,7 +140,16 @@ class AppUser extends Equatable {
 
   @override
   List<Object?> get props => [
-        uid, vipLevel, vipExpiresAt, xp, level, dailyStreak,
-        adsWatchedToday, lastAdAt, status, displayName, photoUrl,
-      ];
+    uid,
+    vipLevel,
+    vipExpiresAt,
+    xp,
+    level,
+    dailyStreak,
+    adsWatchedToday,
+    lastAdAt,
+    status,
+    displayName,
+    photoUrl,
+  ];
 }

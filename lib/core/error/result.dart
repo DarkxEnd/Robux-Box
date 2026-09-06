@@ -21,17 +21,16 @@ sealed class Result<T> {
   R when<R>({
     required R Function(T value) success,
     required R Function(Failure failure) failure,
-  }) =>
-      switch (this) {
-        Ok<T>(:final value) => success(value),
-        Err<T>(failure: final f) => failure(f),
-      };
+  }) => switch (this) {
+    Ok<T>(:final value) => success(value),
+    Err<T>(failure: final f) => failure(f),
+  };
 
   /// Transforms a success value, leaving a failure untouched.
   Result<R> map<R>(R Function(T value) transform) => switch (this) {
-        Ok<T>(:final value) => Result<R>.success(transform(value)),
-        Err<T>(failure: final f) => Result<R>.failure(f),
-      };
+    Ok<T>(:final value) => Result<R>.success(transform(value)),
+    Err<T>(failure: final f) => Result<R>.failure(f),
+  };
 }
 
 final class Ok<T> extends Result<T> {

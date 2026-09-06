@@ -23,19 +23,19 @@ abstract final class AppToast {
 
   /// Renders a [Failure] with the icon its type deserves.
   static void failure(BuildContext context, Failure failure) => _show(
-        context,
-        failure.message,
-        switch (failure) {
-          NetworkFailure() => AppTheme.warning,
-          _ => AppTheme.danger,
-        },
-        switch (failure) {
-          NetworkFailure() => Icons.wifi_off_rounded,
-          AuthFailure() => Icons.lock_outline,
-          PermissionFailure() => Icons.block_outlined,
-          _ => Icons.error_outline,
-        },
-      );
+    context,
+    failure.message,
+    switch (failure) {
+      NetworkFailure() => AppTheme.warning,
+      _ => AppTheme.danger,
+    },
+    switch (failure) {
+      NetworkFailure() => Icons.wifi_off_rounded,
+      AuthFailure() => Icons.lock_outline,
+      PermissionFailure() => Icons.block_outlined,
+      _ => Icons.error_outline,
+    },
+  );
 
   static void _show(
     BuildContext context,

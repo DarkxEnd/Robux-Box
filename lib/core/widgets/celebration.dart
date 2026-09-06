@@ -38,12 +38,13 @@ class _ConfettiLayerState extends State<_ConfettiLayer>
   final _rand = Random();
   late final List<_Piece> _pieces;
 
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 1800),
-  )..addStatusListener((s) {
-      if (s == AnimationStatus.completed) widget.onDone();
-    });
+  late final AnimationController _c =
+      AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 1800),
+      )..addStatusListener((s) {
+        if (s == AnimationStatus.completed) widget.onDone();
+      });
 
   @override
   void initState() {

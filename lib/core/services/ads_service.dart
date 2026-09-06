@@ -57,9 +57,9 @@ class AdsService {
   bool get isInterstitialReady => _rewardedInterstitial != null;
 
   bool isReady(AdFormat format) => switch (format) {
-        AdFormat.rewarded => isRewardedReady,
-        AdFormat.interstitial => isInterstitialReady,
-      };
+    AdFormat.rewarded => isRewardedReady,
+    AdFormat.interstitial => isInterstitialReady,
+  };
 
   /// Preloads so the user never waits on a tap. Safe to call repeatedly.
   Future<void> preload(AdFormat format) async {
@@ -108,7 +108,9 @@ class AdsService {
           if (!completer.isCompleted) completer.complete();
         },
         onAdFailedToLoad: (err) {
-          log.w('rewarded interstitial load failed: ${err.code} ${err.message}');
+          log.w(
+            'rewarded interstitial load failed: ${err.code} ${err.message}',
+          );
           _rewardedInterstitial = null;
           if (!completer.isCompleted) completer.complete();
         },

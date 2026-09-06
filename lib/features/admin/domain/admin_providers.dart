@@ -33,20 +33,23 @@ final adminReportsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
   return ref.watch(adminRepositoryProvider).watchReports();
 });
 
-final adminVipPurchasesProvider =
-    StreamProvider<List<Map<String, dynamic>>>((ref) {
+final adminVipPurchasesProvider = StreamProvider<List<Map<String, dynamic>>>((
+  ref,
+) {
   return ref.watch(adminRepositoryProvider).watchVipPurchases();
 });
 
 /// One page of users, plus the cursor for the next.
-final adminUsersProvider =
-    FutureProvider<(List<AdminUser>, String?)>((ref) async {
+final adminUsersProvider = FutureProvider<(List<AdminUser>, String?)>((
+  ref,
+) async {
   final res = await ref.watch(adminRepositoryProvider).listUsers();
   return res.valueOrNull ?? (const <AdminUser>[], null);
 });
 
-final adminAnalyticsProvider =
-    FutureProvider<Map<String, dynamic>>((ref) async {
+final adminAnalyticsProvider = FutureProvider<Map<String, dynamic>>((
+  ref,
+) async {
   final res = await ref.watch(adminRepositoryProvider).refreshAnalytics();
   return res.valueOrNull ?? const {};
 });

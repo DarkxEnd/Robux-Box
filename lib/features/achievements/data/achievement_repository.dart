@@ -17,18 +17,22 @@ class AchievementRepository {
       .where('isActive', isEqualTo: true)
       .orderBy('sortOrder')
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => Achievement.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) =>
+            snap.docs.map((d) => Achievement.fromMap(d.id, d.data())).toList(),
+      );
 
   Stream<Map<String, UserAchievement>> watchProgress(String uid) => _db
       .collection(FsPaths.users)
       .doc(uid)
       .collection(FsPaths.userAchievements)
       .snapshots()
-      .map((snap) => {
-            for (final d in snap.docs)
-              d.id: UserAchievement.fromMap(d.id, d.data()),
-          });
+      .map(
+        (snap) => {
+          for (final d in snap.docs)
+            d.id: UserAchievement.fromMap(d.id, d.data()),
+        },
+      );
 }
 
 final achievementRepositoryProvider = Provider<AchievementRepository>((ref) {
@@ -46,9 +50,9 @@ final achievementsProvider = StreamProvider<List<AchievementView>>((ref) {
   final uid = ref.watch(currentUidProvider);
 
   if (uid == null) {
-    return repo
-        .watchCatalogue()
-        .map((list) => list.map((a) => AchievementView(a, null)).toList());
+    return repo.watchCatalogue().map(
+      (list) => list.map((a) => AchievementView(a, null)).toList(),
+    );
   }
 
   return CombineLatestStream.combine2(

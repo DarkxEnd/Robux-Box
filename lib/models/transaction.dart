@@ -31,10 +31,8 @@ enum TxType {
   /// breaks history for every already-written document.
   final String wire;
 
-  static TxType fromWire(String? v) => TxType.values.firstWhere(
-        (t) => t.wire == v,
-        orElse: () => TxType.other,
-      );
+  static TxType fromWire(String? v) =>
+      TxType.values.firstWhere((t) => t.wire == v, orElse: () => TxType.other);
 }
 
 /// One entry in `transactions/{id}` — an immutable audit record of a wallet
@@ -59,8 +57,9 @@ class AppTransaction extends Equatable {
         uid: Parse.toStr(map['uid']),
         type: TxType.fromWire(map['type'] as String?),
         coins: Parse.toInt(map['coins']),
-        balanceAfter:
-            map['balanceAfter'] == null ? null : Parse.toInt(map['balanceAfter']),
+        balanceAfter: map['balanceAfter'] == null
+            ? null
+            : Parse.toInt(map['balanceAfter']),
         description: map['description'] as String?,
         provider: map['provider'] as String?,
         referenceId: map['referenceId'] as String?,

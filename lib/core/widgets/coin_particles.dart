@@ -65,9 +65,8 @@ class _CoinParticlesState extends State<CoinParticles>
             child: IgnorePointer(
               child: AnimatedBuilder(
                 animation: _c,
-                builder: (_, __) => CustomPaint(
-                  painter: _CoinPainter(_angles, _c.value),
-                ),
+                builder: (_, __) =>
+                    CustomPaint(painter: _CoinPainter(_angles, _c.value)),
               ),
             ),
           ),

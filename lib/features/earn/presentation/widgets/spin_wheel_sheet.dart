@@ -12,10 +12,10 @@ import 'earn_reward_dialog.dart';
 import 'spin_wheel.dart';
 
 Future<void> showSpinWheelSheet(BuildContext context) => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => const SpinWheelSheet(),
-    );
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => const SpinWheelSheet(),
+);
 
 /// The spin game.
 ///
@@ -49,8 +49,9 @@ class _SpinWheelSheetState extends ConsumerState<SpinWheelSheet>
     if (_spinning) return;
     setState(() => _spinning = true);
 
-    final result =
-        await ref.read(earnControllerProvider.notifier).playGame('spin');
+    final result = await ref
+        .read(earnControllerProvider.notifier)
+        .playGame('spin');
     if (!mounted) return;
 
     await result.when(
@@ -60,12 +61,13 @@ class _SpinWheelSheetState extends ConsumerState<SpinWheelSheet>
         // coins are still whatever it granted.
         final index = (earn.index ?? 0).clamp(0, segments - 1);
 
-        _rotation = Tween<double>(
-          begin: 0,
-          end: SpinWheel.rotationFor(index, segments),
-        ).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.easeOutQuart),
-        );
+        _rotation =
+            Tween<double>(
+              begin: 0,
+              end: SpinWheel.rotationFor(index, segments),
+            ).animate(
+              CurvedAnimation(parent: _controller, curve: Curves.easeOutQuart),
+            );
         await _controller.forward(from: 0);
 
         if (!mounted) return;

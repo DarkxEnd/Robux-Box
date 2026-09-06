@@ -27,16 +27,16 @@ void main() {
 
   /// Pulls `name: <number>` out of the TypeScript source.
   num? tsNumber(String source, String name) {
-    final match =
-        RegExp('$name:\\s*([0-9]+(?:\\.[0-9]+)?)').firstMatch(source);
+    final match = RegExp('$name:\\s*([0-9]+(?:\\.[0-9]+)?)').firstMatch(source);
     return match == null ? null : num.parse(match.group(1)!);
   }
 
   /// Pulls one entry out of a TS object literal, e.g. bronze: 1.25.
   num? tsMapEntry(String source, String map, String key) {
-    final block = RegExp('$map\\s*:\\s*\\{([^}]*)\\}', dotAll: true)
-        .firstMatch(source)
-        ?.group(1);
+    final block = RegExp(
+      '$map\\s*:\\s*\\{([^}]*)\\}',
+      dotAll: true,
+    ).firstMatch(source)?.group(1);
     if (block == null) return null;
     return tsNumber(block, key);
   }
@@ -144,7 +144,7 @@ void main() {
     });
 
     test('the daily streak ladder only ever goes up', () {
-      final rewards = AppConstants.dailyStreakRewards;
+      const rewards = AppConstants.dailyStreakRewards;
       for (var i = 1; i < rewards.length; i++) {
         expect(rewards[i], greaterThan(rewards[i - 1]));
       }
@@ -195,15 +195,18 @@ void main() {
     });
 
     test('client tier multipliers match the server', () {
-      final block = RegExp(r'TIER_MULTIPLIERS[^{]*\{([^}]*)\}', dotAll: true)
-          .firstMatch(economyTs)
-          ?.group(1);
-      expect(block, isNotNull,
-          reason: 'TIER_MULTIPLIERS not found in economy.ts');
+      final block = RegExp(
+        r'TIER_MULTIPLIERS[^{]*\{([^}]*)\}',
+        dotAll: true,
+      ).firstMatch(economyTs)?.group(1);
+      expect(
+        block,
+        isNotNull,
+        reason: 'TIER_MULTIPLIERS not found in economy.ts',
+      );
 
       for (final entry in TierMap.multipliers.entries) {
-        final match =
-            RegExp('${entry.key}:\\s*([0-9.]+)').firstMatch(block!);
+        final match = RegExp('${entry.key}:\\s*([0-9.]+)').firstMatch(block!);
         expect(match, isNotNull, reason: 'tier ${entry.key} missing on server');
         expect(
           num.parse(match!.group(1)!),

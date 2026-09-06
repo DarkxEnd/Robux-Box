@@ -43,10 +43,9 @@ class RobuxBoxApp extends ConsumerWidget {
         // balance card and nav bar overflow well before that — clamping is
         // better than letting the layout break, and 1.3 still satisfies the
         // accessibility floor.
-        final scale = MediaQuery.textScalerOf(context).clamp(
-          minScaleFactor: 0.85,
-          maxScaleFactor: 1.3,
-        );
+        final scale = MediaQuery.textScalerOf(
+          context,
+        ).clamp(minScaleFactor: 0.85, maxScaleFactor: 1.3);
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaler: scale),
           child: child ?? const SizedBox.shrink(),

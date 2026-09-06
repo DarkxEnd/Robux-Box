@@ -107,8 +107,7 @@ class _Tile extends ConsumerWidget {
             ),
             TextField(
               controller: stock,
-              keyboardType:
-                  const TextInputType.numberWithOptions(signed: true),
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
               decoration: const InputDecoration(
                 labelText: 'Stock',
                 helperText: '-1 for unlimited',

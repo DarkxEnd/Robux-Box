@@ -114,8 +114,7 @@ class _Tile extends ConsumerWidget {
                 if (redemption.status == RedemptionStatus.pending)
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () =>
-                          _process(context, ref, 'processing'),
+                      onPressed: () => _process(context, ref, 'processing'),
                       child: const Text('Start'),
                     ),
                   ),
@@ -147,11 +146,9 @@ class _Tile extends ConsumerWidget {
     String status, {
     String note = '',
   }) async {
-    final result = await ref.read(adminRepositoryProvider).processRedemption(
-          id: redemption.id,
-          status: status,
-          note: note,
-        );
+    final result = await ref
+        .read(adminRepositoryProvider)
+        .processRedemption(id: redemption.id, status: status, note: note);
     if (!context.mounted) return;
     result.when(
       success: (_) => AppToast.success(context, status),

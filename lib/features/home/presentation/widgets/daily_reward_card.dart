@@ -37,8 +37,10 @@ class DailyRewardCard extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.local_fire_department,
-                    color: AppTheme.warning),
+                const Icon(
+                  Icons.local_fire_department,
+                  color: AppTheme.warning,
+                ),
                 const SizedBox(width: AppDimens.sm),
                 Expanded(
                   child: Text(
@@ -46,18 +48,17 @@ class DailyRewardCard extends ConsumerWidget {
                     style: theme.textTheme.titleSmall,
                   ),
                 ),
-                Text(
-                  l.homeStreakDay(streak),
-                  style: theme.textTheme.bodySmall,
-                ),
+                Text(l.homeStreakDay(streak), style: theme.textTheme.bodySmall),
               ],
             ),
             const SizedBox(height: AppDimens.lg),
             Row(
               children: [
-                for (var i = 0;
-                    i < AppConstants.dailyStreakRewards.length;
-                    i++) ...[
+                for (
+                  var i = 0;
+                  i < AppConstants.dailyStreakRewards.length;
+                  i++
+                ) ...[
                   Expanded(
                     child: _Day(
                       coins: AppConstants.dailyStreakRewards[i],
@@ -84,10 +85,7 @@ class DailyRewardCard extends ConsumerWidget {
                         result.when(
                           success: (coins) {
                             Celebration.burst(context);
-                            AppToast.success(
-                              context,
-                              l.earnRewardedYou(coins),
-                            );
+                            AppToast.success(context, l.earnRewardedYou(coins));
                           },
                           failure: (f) => AppToast.failure(context, f),
                         );

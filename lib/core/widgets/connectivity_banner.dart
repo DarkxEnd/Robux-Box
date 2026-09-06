@@ -34,8 +34,11 @@ class ConnectivityBanner extends ConsumerWidget {
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.wifi_off_rounded,
-                      size: 15, color: AppTheme.warning),
+                  Icon(
+                    Icons.wifi_off_rounded,
+                    size: 15,
+                    color: AppTheme.warning,
+                  ),
                   SizedBox(width: AppDimens.sm),
                   Text(
                     'No internet connection',

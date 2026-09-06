@@ -21,7 +21,10 @@ class RGlyph extends StatelessWidget {
         decoration: BoxDecoration(
           color: fg.withValues(alpha: 0.14),
           borderRadius: BorderRadius.circular(size * 0.28),
-          border: Border.all(color: fg.withValues(alpha: 0.35), width: size * 0.03),
+          border: Border.all(
+            color: fg.withValues(alpha: 0.35),
+            width: size * 0.03,
+          ),
         ),
         child: Center(
           child: Text(

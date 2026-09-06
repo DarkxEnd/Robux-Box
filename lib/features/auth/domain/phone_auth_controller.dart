@@ -31,15 +31,14 @@ class PhoneAuthState {
     String? verificationId,
     int? resendToken,
     String? phoneNumber,
-  }) =>
-      PhoneAuthState(
-        step: step ?? this.step,
-        busy: busy ?? this.busy,
-        failure: clearFailure ? null : (failure ?? this.failure),
-        verificationId: verificationId ?? this.verificationId,
-        resendToken: resendToken ?? this.resendToken,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-      );
+  }) => PhoneAuthState(
+    step: step ?? this.step,
+    busy: busy ?? this.busy,
+    failure: clearFailure ? null : (failure ?? this.failure),
+    verificationId: verificationId ?? this.verificationId,
+    resendToken: resendToken ?? this.resendToken,
+    phoneNumber: phoneNumber ?? this.phoneNumber,
+  );
 }
 
 /// Phone sign-in, which is two screens' worth of state and therefore gets its
@@ -64,7 +63,9 @@ class PhoneAuthController extends AutoDisposeNotifier<PhoneAuthState> {
       phoneNumber: phoneNumber,
     );
 
-    await ref.read(authRepositoryProvider).startPhoneVerification(
+    await ref
+        .read(authRepositoryProvider)
+        .startPhoneVerification(
           phoneNumber: phoneNumber,
           resendToken: resend ? state.resendToken : null,
           onCodeSent: (verificationId, resendToken) {
@@ -105,10 +106,9 @@ class PhoneAuthController extends AutoDisposeNotifier<PhoneAuthState> {
     }
 
     state = state.copyWith(busy: true, clearFailure: true);
-    final result = await ref.read(authRepositoryProvider).confirmSmsCode(
-          verificationId: verificationId,
-          smsCode: smsCode,
-        );
+    final result = await ref
+        .read(authRepositoryProvider)
+        .confirmSmsCode(verificationId: verificationId, smsCode: smsCode);
 
     return result.when(
       success: (_) {
@@ -123,12 +123,12 @@ class PhoneAuthController extends AutoDisposeNotifier<PhoneAuthState> {
   }
 
   void backToNumber() => state = state.copyWith(
-        step: PhoneAuthStep.enterNumber,
-        clearFailure: true,
-      );
+    step: PhoneAuthStep.enterNumber,
+    clearFailure: true,
+  );
 }
 
 final phoneAuthControllerProvider =
     AutoDisposeNotifierProvider<PhoneAuthController, PhoneAuthState>(
-  PhoneAuthController.new,
-);
+      PhoneAuthController.new,
+    );

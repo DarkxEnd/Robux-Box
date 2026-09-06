@@ -14,10 +14,10 @@ class AdSession {
   });
 
   factory AdSession.fromMap(Map<String, dynamic> map) => AdSession(
-        nonce: (map['nonce'] as String?) ?? '',
-        adsLeft: (map['adsLeft'] as num?)?.toInt() ?? 0,
-        format: (map['format'] as String?) ?? 'rewarded',
-      );
+    nonce: (map['nonce'] as String?) ?? '',
+    adsLeft: (map['adsLeft'] as num?)?.toInt() ?? 0,
+    format: (map['format'] as String?) ?? 'rewarded',
+  );
 
   final String nonce;
   final int adsLeft;
@@ -29,10 +29,10 @@ class EarnResult {
   const EarnResult({required this.coins, this.balance, this.extra = const {}});
 
   factory EarnResult.fromMap(Map<String, dynamic> map) => EarnResult(
-        coins: (map['coins'] as num?)?.toInt() ?? 0,
-        balance: (map['balance'] as num?)?.toInt(),
-        extra: map,
-      );
+    coins: (map['coins'] as num?)?.toInt() ?? 0,
+    balance: (map['balance'] as num?)?.toInt(),
+    extra: map,
+  );
 
   /// Coins granted by this action. Always comes from the server — the client
   /// never computes a payout, because a client that could would be the whole
@@ -127,8 +127,8 @@ final tierProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   // account's tier.
   ref.watch(currentUidProvider);
   final country = await ref.read(geoTierServiceProvider).detectCountryCode();
-  final res = await ref.read(earnRepositoryProvider).resolveTier(
-        countryCode: country,
-      );
+  final res = await ref
+      .read(earnRepositoryProvider)
+      .resolveTier(countryCode: country);
   return res.valueOrNull ?? const {};
 });

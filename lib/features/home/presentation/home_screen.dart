@@ -25,7 +25,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final user = ref.watch(currentUserProvider).valueOrNull;
-    final wallet = ref.watch(walletProvider).valueOrNull ?? const Wallet.empty('');
+    final wallet =
+        ref.watch(walletProvider).valueOrNull ?? const Wallet.empty('');
     final unread = ref.watch(unreadNotificationCountProvider).valueOrNull ?? 0;
 
     return RefreshIndicator(

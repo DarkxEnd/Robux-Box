@@ -14,7 +14,7 @@ import '../../../core/utils/logger.dart';
 /// credit before the rules could stop them.
 class AuthRepository {
   AuthRepository(this._auth, {GoogleSignIn? googleSignIn})
-      : _google = googleSignIn ?? GoogleSignIn();
+    : _google = googleSignIn ?? GoogleSignIn();
 
   final FirebaseAuth _auth;
   final GoogleSignIn _google;
@@ -73,8 +73,8 @@ class AuthRepository {
 
   void unawaitedVerification(User? user) {
     user?.sendEmailVerification().catchError(
-          (Object e) => log.w('verification email failed', e),
-        );
+      (Object e) => log.w('verification email failed', e),
+    );
   }
 
   Future<Result<void>> sendPasswordReset(String email) async {

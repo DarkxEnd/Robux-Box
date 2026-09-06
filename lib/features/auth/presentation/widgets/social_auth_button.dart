@@ -40,7 +40,9 @@ class SocialAuthButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: AppDimens.brMd,
-          border: Border.all(color: scheme.outlineVariant.withValues(alpha: 0.4)),
+          border: Border.all(
+            color: scheme.outlineVariant.withValues(alpha: 0.4),
+          ),
         ),
         child: Center(
           child: busy

@@ -23,15 +23,15 @@ class PromoCode extends Equatable {
   });
 
   factory PromoCode.fromMap(String code, Map<String, dynamic> map) => PromoCode(
-        code: code,
-        rewardCoins: Parse.toInt(map['rewardCoins']),
-        maxRedemptions: Parse.toInt(map['maxRedemptions'], -1),
-        perUserLimit: Parse.toInt(map['perUserLimit'], 1),
-        redemptionCount: Parse.toInt(map['redemptionCount']),
-        isActive: Parse.toBool(map['isActive'], true),
-        expiresAt: Parse.toDate(map['expiresAt']),
-        createdAt: Parse.toDate(map['createdAt']),
-      );
+    code: code,
+    rewardCoins: Parse.toInt(map['rewardCoins']),
+    maxRedemptions: Parse.toInt(map['maxRedemptions'], -1),
+    perUserLimit: Parse.toInt(map['perUserLimit'], 1),
+    redemptionCount: Parse.toInt(map['redemptionCount']),
+    isActive: Parse.toBool(map['isActive'], true),
+    expiresAt: Parse.toDate(map['expiresAt']),
+    createdAt: Parse.toDate(map['createdAt']),
+  );
 
   final String code;
   final int rewardCoins;
@@ -44,8 +44,7 @@ class PromoCode extends Equatable {
   final DateTime? expiresAt;
   final DateTime? createdAt;
 
-  bool get isExpired =>
-      expiresAt != null && DateTime.now().isAfter(expiresAt!);
+  bool get isExpired => expiresAt != null && DateTime.now().isAfter(expiresAt!);
 
   bool get isExhausted =>
       maxRedemptions >= 0 && redemptionCount >= maxRedemptions;
@@ -53,18 +52,25 @@ class PromoCode extends Equatable {
   /// Admin-dashboard display only. The callable makes this decision itself.
   bool get isUsable => isActive && !isExpired && !isExhausted;
 
-  int get remaining =>
-      maxRedemptions < 0 ? -1 : (maxRedemptions - redemptionCount).clamp(0, maxRedemptions);
+  int get remaining => maxRedemptions < 0
+      ? -1
+      : (maxRedemptions - redemptionCount).clamp(0, maxRedemptions);
 
   Map<String, dynamic> toMap() => {
-        'rewardCoins': rewardCoins,
-        'maxRedemptions': maxRedemptions,
-        'perUserLimit': perUserLimit,
-        'isActive': isActive,
-        'expiresAt': expiresAt,
-      };
+    'rewardCoins': rewardCoins,
+    'maxRedemptions': maxRedemptions,
+    'perUserLimit': perUserLimit,
+    'isActive': isActive,
+    'expiresAt': expiresAt,
+  };
 
   @override
-  List<Object?> get props =>
-      [code, rewardCoins, maxRedemptions, redemptionCount, isActive, expiresAt];
+  List<Object?> get props => [
+    code,
+    rewardCoins,
+    maxRedemptions,
+    redemptionCount,
+    isActive,
+    expiresAt,
+  ];
 }

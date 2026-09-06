@@ -12,15 +12,13 @@ import '../../../core/widgets/app_toast.dart';
 import '../../../core/widgets/gradient_button.dart';
 
 Future<void> showReportSheet(BuildContext context) => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: const ReportSheet(),
-      ),
-    );
+  context: context,
+  isScrollControlled: true,
+  builder: (context) => Padding(
+    padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+    child: const ReportSheet(),
+  ),
+);
 
 /// "Report a problem" — a lightweight bug report written to `reports/`.
 ///
@@ -95,8 +93,10 @@ class _ReportSheetState extends ConsumerState<ReportSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(l.settingsReport,
-                style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              l.settingsReport,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: AppDimens.lg),
             TextFormField(
               controller: _message,

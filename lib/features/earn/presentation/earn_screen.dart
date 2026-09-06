@@ -40,8 +40,9 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
   }
 
   Future<void> _watchAd(AdFormat format) async {
-    final result =
-        await ref.read(earnControllerProvider.notifier).watchAd(format: format);
+    final result = await ref
+        .read(earnControllerProvider.notifier)
+        .watchAd(format: format);
     if (!mounted) return;
     result.when(
       success: (coins) async {
@@ -142,9 +143,7 @@ class _EarnScreenState extends ConsumerState<EarnScreen> {
         const SizedBox(height: AppDimens.lg),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.lg),
-          child: _RateAppTile(
-            claimed: user?.rateAppRewardClaimed ?? false,
-          ),
+          child: _RateAppTile(claimed: user?.rateAppRewardClaimed ?? false),
         ),
       ],
     );

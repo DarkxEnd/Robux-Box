@@ -22,9 +22,11 @@ class SupportRepository {
       .where('isActive', isEqualTo: true)
       .orderBy('sortOrder')
       .snapshots()
-      .map((snap) => snap.docs
-          .map((d) => TicketCategory.fromMap(d.id, d.data()))
-          .toList());
+      .map(
+        (snap) => snap.docs
+            .map((d) => TicketCategory.fromMap(d.id, d.data()))
+            .toList(),
+      );
 
   Stream<List<SupportTicket>> watchMine(String uid) => _db
       .collection(FsPaths.supportTickets)
@@ -32,8 +34,11 @@ class SupportRepository {
       .orderBy('updatedAt', descending: true)
       .limit(50)
       .snapshots()
-      .map((snap) =>
-          snap.docs.map((d) => SupportTicket.fromMap(d.id, d.data())).toList());
+      .map(
+        (snap) => snap.docs
+            .map((d) => SupportTicket.fromMap(d.id, d.data()))
+            .toList(),
+      );
 
   Future<Result<String>> create({
     required String uid,
@@ -72,11 +77,7 @@ class SupportRepository {
     try {
       await _db.collection(FsPaths.supportTickets).doc(ticketId).update({
         'messages': FieldValue.arrayUnion([
-          {
-            'body': body.trim(),
-            'fromAdmin': false,
-            'sentAt': Timestamp.now(),
-          }
+          {'body': body.trim(), 'fromAdmin': false, 'sentAt': Timestamp.now()},
         ]),
         'status': 'open',
         'updatedAt': FieldValue.serverTimestamp(),

@@ -74,9 +74,7 @@ class AdminPromocodesScreen extends ConsumerWidget {
                         ),
                         StatusPill(
                           label: code.isUsable ? 'Active' : 'Inactive',
-                          color: code.isUsable
-                              ? AppTheme.success
-                              : Colors.grey,
+                          color: code.isUsable ? AppTheme.success : Colors.grey,
                         ),
                       ],
                     ),
@@ -123,8 +121,7 @@ class AdminPromocodesScreen extends ConsumerWidget {
             ),
             TextField(
               controller: maxUses,
-              keyboardType:
-                  const TextInputType.numberWithOptions(signed: true),
+              keyboardType: const TextInputType.numberWithOptions(signed: true),
               decoration: const InputDecoration(
                 labelText: 'Max redemptions',
                 helperText: '-1 for unlimited',
@@ -157,7 +154,9 @@ class AdminPromocodesScreen extends ConsumerWidget {
       return;
     }
 
-    final result = await ref.read(adminRepositoryProvider).upsertPromocode(
+    final result = await ref
+        .read(adminRepositoryProvider)
+        .upsertPromocode(
           code: code.text.trim().toUpperCase(),
           rewardCoins: reward,
           maxRedemptions: int.tryParse(maxUses.text.trim()) ?? -1,

@@ -1,0 +1,83 @@
+name: Deploy Firebase
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "functions/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
+      - "firebase.json"
+      - ".github/workflows/deploy-firebase.yml"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "What to deploy"
+        required: true
+        default: "functions,firestore,storage"
+
+concurrency:
+  group: deploy-firebase
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # A deploy touches production money handling, so it runs only from main
+    # and only through an environment that can require approval.
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Build functions
+        working-directory: functions
+        run: |
+          npm ci
+          npm run build
+
+      - name: Write service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT is not set."
+            exit 1
+          fi
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+
+      - name: Set function secrets
+        env:
+          OFFERWALL_POSTBACK_SECRET: ${{ secrets.OFFERWALL_POSTBACK_SECRET }}
+          CPX_SECURE_HASH: ${{ secrets.CPX_SECURE_HASH }}
+          CPALEAD_SECRET: ${{ secrets.CPALEAD_SECRET }}
+          LOOTWALLS_SECRET: ${{ secrets.LOOTWALLS_SECRET }}
+        run: |
+          # Written to functions/.env, which .gitignore blocks from ever being
+          # committed. The postback secrets are what stop anyone from crediting
+          # coins to any account.
+          {
+            [ -n "$OFFERWALL_POSTBACK_SECRET" ] && echo "OFFERWALL_POSTBACK_SECRET=$OFFERWALL_POSTBACK_SECRET"
+            [ -n "$CPX_SECURE_HASH" ] && echo "CPX_SECURE_HASH=$CPX_SECURE_HASH"
+            [ -n "$CPALEAD_SECRET" ] && echo "CPALEAD_SECRET=$CPALEAD_SECRET"
+            [ -n "$LOOTWALLS_SECRET" ] && echo "LOOTWALLS_SECRET=$LOOTWALLS_SECRET"
+          } > functions/.env || true
+
+      - name: Deploy
+        run: |
+          npx firebase-tools@latest deploy \
+            --project robux-box1 \
+            --only "${{ github.event.inputs.target || 'functions,firestore,storage' }}" \
+            --non-interactive \
+            --force
+
+      - name: Shred credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json" functions/.env

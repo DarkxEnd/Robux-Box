@@ -59,9 +59,7 @@ class AdminManageAdminsScreen extends ConsumerWidget {
                             isSelf ? 'You' : user.uid,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
+                            style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(fontFamily: 'monospace'),
                           ),
                         ],
@@ -98,7 +96,7 @@ class AdminManageAdminsScreen extends ConsumerWidget {
         content: Text(
           grant
               ? 'This user will be able to adjust balances, process '
-                  'redemptions and send broadcasts.'
+                    'redemptions and send broadcasts.'
               : 'This user will lose all admin access.',
         ),
         actions: [

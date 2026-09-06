@@ -56,9 +56,9 @@ class AdminReportsScreen extends ConsumerWidget {
                     ),
                     SelectableText(
                       Parse.toStr(report['uid']),
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            fontFamily: 'monospace',
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelSmall?.copyWith(fontFamily: 'monospace'),
                     ),
                   ],
                 ),

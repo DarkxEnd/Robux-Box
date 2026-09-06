@@ -19,10 +19,10 @@ class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
 
   static String _routeFor(OfferwallProvider p) => switch (p) {
-        OfferwallProvider.cpx => Routes.offerwall,
-        OfferwallProvider.cpalead => Routes.offerwallCpalead,
-        OfferwallProvider.lootwalls => Routes.offerwallLootwalls,
-      };
+    OfferwallProvider.cpx => Routes.offerwall,
+    OfferwallProvider.cpalead => Routes.offerwallCpalead,
+    OfferwallProvider.lootwalls => Routes.offerwallLootwalls,
+  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

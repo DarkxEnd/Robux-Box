@@ -1,0 +1,187 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.47.2"
+
+jobs:
+  flutter:
+    name: Analyze & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # Regenerates the localisations rather than trusting the committed
+      # copies — a stale generated file is otherwise invisible until runtime.
+      - run: flutter gen-l10n
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Test
+        run: flutter test --coverage
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/lcov.info
+          if-no-files-found: ignore
+
+  functions:
+    name: Cloud Functions build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm run build
+
+  android:
+    name: Build signed Android
+    runs-on: ubuntu-latest
+    needs: [flutter, functions]
+    # Only release builds are signed and published; PR builds stop at the
+    # checks above so a fork can never reach the signing key.
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Restore google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+          fi
+
+      - name: Restore signing keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          # The upload key is irreplaceable: lose it and the published app can
+          # never be updated again. It lives only in Actions secrets.
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::KEYSTORE_BASE64 is not set; refusing to build unsigned."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storeFile=upload-keystore.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          EOF
+
+      - name: Build AAB
+        env:
+          ADMOB_REWARDED_ANDROID: ${{ secrets.ADMOB_REWARDED_ANDROID }}
+          ADMOB_REWARDED_INTERSTITIAL_ANDROID: ${{ secrets.ADMOB_REWARDED_INTERSTITIAL_ANDROID }}
+          ADMOB_APP_OPEN_ANDROID: ${{ secrets.ADMOB_APP_OPEN_ANDROID }}
+          ADMOB_BANNER_ANDROID: ${{ secrets.ADMOB_BANNER_ANDROID }}
+        run: |
+          flutter build appbundle --release \
+            --dart-define=FLAVOR=prod \
+            --dart-define=ADMOB_REWARDED_ANDROID="$ADMOB_REWARDED_ANDROID" \
+            --dart-define=ADMOB_REWARDED_INTERSTITIAL_ANDROID="$ADMOB_REWARDED_INTERSTITIAL_ANDROID" \
+            --dart-define=ADMOB_APP_OPEN_ANDROID="$ADMOB_APP_OPEN_ANDROID" \
+            --dart-define=ADMOB_BANNER_ANDROID="$ADMOB_BANNER_ANDROID" \
+            --obfuscate --split-debug-info=build/symbols
+
+      - name: Build APK
+        env:
+          ADMOB_REWARDED_ANDROID: ${{ secrets.ADMOB_REWARDED_ANDROID }}
+          ADMOB_REWARDED_INTERSTITIAL_ANDROID: ${{ secrets.ADMOB_REWARDED_INTERSTITIAL_ANDROID }}
+          ADMOB_APP_OPEN_ANDROID: ${{ secrets.ADMOB_APP_OPEN_ANDROID }}
+          ADMOB_BANNER_ANDROID: ${{ secrets.ADMOB_BANNER_ANDROID }}
+        run: |
+          flutter build apk --release \
+            --dart-define=FLAVOR=prod \
+            --dart-define=ADMOB_REWARDED_ANDROID="$ADMOB_REWARDED_ANDROID" \
+            --dart-define=ADMOB_REWARDED_INTERSTITIAL_ANDROID="$ADMOB_REWARDED_INTERSTITIAL_ANDROID" \
+            --dart-define=ADMOB_APP_OPEN_ANDROID="$ADMOB_APP_OPEN_ANDROID" \
+            --dart-define=ADMOB_BANNER_ANDROID="$ADMOB_BANNER_ANDROID"
+
+      - name: Remove signing material
+        if: always()
+        run: rm -f android/app/upload-keystore.jks android/key.properties
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            build/app/outputs/bundle/release/*.aab
+            build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
+
+      # Obfuscation symbols are needed to read a release stack trace. Kept
+      # separate from the public release so they are not handed out with the
+      # APK.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debug-symbols
+          path: build/symbols
+          if-no-files-found: ignore
+
+      - name: Publish rolling release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: Latest Android build
+          body: |
+            Automated build of `${{ github.sha }}`.
+
+            The AAB is what Play Console accepts; the APK is for sideloading
+            and testing. Note that a sideloaded APK cannot pass Play Integrity,
+            so App Check will reject it if enforcement is on.
+          files: |
+            build/app/outputs/bundle/release/*.aab
+            build/app/outputs/flutter-apk/*.apk
+          prerelease: true
+          make_latest: false

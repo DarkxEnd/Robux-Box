@@ -29,9 +29,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       icon: Icons.task_alt_rounded,
       title: 'Finish offers',
       body: 'Surveys and app trials pay far more than a single video.',
-      gradient: LinearGradient(
-        colors: [Color(0xFF00D1FF), Color(0xFF2FD07A)],
-      ),
+      gradient: LinearGradient(colors: [Color(0xFF00D1FF), Color(0xFF2FD07A)]),
     ),
     _Page(
       icon: Icons.card_giftcard_rounded,
@@ -155,8 +153,9 @@ class _Page extends StatelessWidget {
           Text(
             body,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

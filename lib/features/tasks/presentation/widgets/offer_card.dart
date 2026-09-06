@@ -15,12 +15,12 @@ class OfferCard extends StatelessWidget {
   final VoidCallback onTap;
 
   IconData get _categoryIcon => switch (offer.category) {
-        'survey' => Icons.poll_outlined,
-        'app_install' => Icons.download_outlined,
-        'signup' => Icons.how_to_reg_outlined,
-        'game' => Icons.sports_esports_outlined,
-        _ => Icons.task_alt_outlined,
-      };
+    'survey' => Icons.poll_outlined,
+    'app_install' => Icons.download_outlined,
+    'signup' => Icons.how_to_reg_outlined,
+    'game' => Icons.sports_esports_outlined,
+    _ => Icons.task_alt_outlined,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +39,22 @@ class OfferCard extends StatelessWidget {
               child: offer.imageUrl.isEmpty
                   ? ColoredBox(
                       color: theme.colorScheme.primary.withValues(alpha: 0.14),
-                      child: Icon(_categoryIcon,
-                          color: theme.colorScheme.primary),
+                      child: Icon(
+                        _categoryIcon,
+                        color: theme.colorScheme.primary,
+                      ),
                     )
                   : CachedNetworkImage(
                       imageUrl: offer.imageUrl,
                       fit: BoxFit.cover,
                       errorWidget: (_, __, ___) => ColoredBox(
-                        color:
-                            theme.colorScheme.primary.withValues(alpha: 0.14),
-                        child: Icon(_categoryIcon,
-                            color: theme.colorScheme.primary),
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.14,
+                        ),
+                        child: Icon(
+                          _categoryIcon,
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
                     ),
             ),
@@ -103,8 +108,11 @@ class OfferCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.monetization_on,
-                      size: 14, color: AppTheme.coin),
+                  const Icon(
+                    Icons.monetization_on,
+                    size: 14,
+                    color: AppTheme.coin,
+                  ),
                   const SizedBox(width: 3),
                   Text(
                     offer.estimatedCoins.compact,
@@ -145,10 +153,10 @@ class _Difficulty extends StatelessWidget {
               shape: BoxShape.circle,
               color: i < level
                   ? (level == 1
-                      ? AppTheme.success
-                      : level == 2
-                          ? AppTheme.warning
-                          : AppTheme.danger)
+                        ? AppTheme.success
+                        : level == 2
+                        ? AppTheme.warning
+                        : AppTheme.danger)
                   : scheme.outlineVariant,
             ),
           ),

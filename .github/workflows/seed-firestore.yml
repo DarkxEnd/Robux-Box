@@ -1,0 +1,44 @@
+name: Seed Firestore
+
+# Manual only. Seeding writes the reward catalogue, achievements and config
+# documents; running it on a push would overwrite prices an admin had tuned
+# from the dashboard.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "seed" to confirm'
+        required: true
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.event.inputs.confirm == 'seed'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm i firebase-admin@latest
+
+      - name: Write service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT is not set."
+            exit 1
+          fi
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/sa.json"
+
+      - name: Seed
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+        run: node scripts/seed.js
+
+      - name: Shred credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"

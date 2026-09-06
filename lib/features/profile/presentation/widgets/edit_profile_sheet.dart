@@ -38,8 +38,9 @@ class EditProfileSheet extends ConsumerStatefulWidget {
 class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.user.displayName ?? '');
-  late final _roblox =
-      TextEditingController(text: widget.user.robloxUsername ?? '');
+  late final _roblox = TextEditingController(
+    text: widget.user.robloxUsername ?? '',
+  );
   bool _busy = false;
 
   @override
@@ -53,7 +54,9 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _busy = true);
 
-    final result = await ref.read(userRepositoryProvider).updateProfile(
+    final result = await ref
+        .read(userRepositoryProvider)
+        .updateProfile(
           uid: widget.user.uid,
           displayName: _name.text,
           robloxUsername: _roblox.text,

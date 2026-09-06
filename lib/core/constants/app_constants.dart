@@ -157,7 +157,8 @@ enum GeoTier {
   final double multiplier;
   final String label;
 
-  static GeoTier fromLevel(int level) =>
-      GeoTier.values.firstWhere((t) => t.level == level,
-          orElse: () => GeoTier.t4);
+  static GeoTier fromLevel(int level) => GeoTier.values.firstWhere(
+    (t) => t.level == level,
+    orElse: () => GeoTier.t4,
+  );
 }

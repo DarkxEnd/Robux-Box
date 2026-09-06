@@ -233,7 +233,8 @@ class _TierCard extends ConsumerWidget {
           _Benefit(icon: Icons.ondemand_video, text: l.vipMoreAds(maxAds)),
           _Benefit(
             icon: Icons.card_giftcard,
-            text: '${l.vipDailyBonus}: '
+            text:
+                '${l.vipDailyBonus}: '
                 '${(AppConstants.vipDailyBonusCoins[tier] ?? 0).grouped}',
           ),
           if (canBuy) ...[
@@ -258,13 +259,15 @@ class _TierCard extends ConsumerWidget {
                 if (coinPrice != null) const SizedBox(width: AppDimens.md),
                 Expanded(
                   child: GradientButton(
-                    label: product?.price ??
+                    label:
+                        product?.price ??
                         AppConstants.vipMoneyPrices[tier] ??
                         l.vipBuyWithMoney,
                     expand: true,
                     onPressed: () async {
-                      final result =
-                          await ref.read(vipIapServiceProvider).buy(tier);
+                      final result = await ref
+                          .read(vipIapServiceProvider)
+                          .buy(tier);
                       if (!context.mounted) return;
                       result.when(
                         success: (_) {},
@@ -307,8 +310,9 @@ class _TierCard extends ConsumerWidget {
     );
     if (confirmed != true || !context.mounted) return;
 
-    final result =
-        await ref.read(vipRepositoryProvider).purchaseWithCoins(tier);
+    final result = await ref
+        .read(vipRepositoryProvider)
+        .purchaseWithCoins(tier);
     if (!context.mounted) return;
     result.when(
       success: (_) => AppToast.success(context, tier.vipLabel),
