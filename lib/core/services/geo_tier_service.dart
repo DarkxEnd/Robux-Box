@@ -12,8 +12,8 @@ import '../utils/logger.dart';
 /// resolve — otherwise a user could VPN into a T1 country and multiply every
 /// payout. Location permission is optional throughout: a refusal costs nothing
 /// but a slightly less accurate first guess.
-class GeoService {
-  const GeoService();
+class GeoTierService {
+  const GeoTierService();
 
   /// Best-effort ISO-3166 alpha-2 code, or null.
   ///
