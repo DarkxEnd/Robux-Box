@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// Lifecycle of a withdrawal request (`redemptions/{id}`).
 ///

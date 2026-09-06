@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// A catalogue achievement (`achievements/{id}`), seeded by
 /// `scripts/seed.js`. `metric` names a field on the wallet document that the

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../core/constants/app_constants.dart';
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// The user profile document (`users/{uid}`). The coin balance lives in
 /// `wallets/{uid}`, not here — see [Wallet].

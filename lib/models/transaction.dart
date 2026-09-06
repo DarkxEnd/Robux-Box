@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// Why a wallet moved. Mirrors the `type` values written by
 /// `functions/src/lib/wallet.ts`; unknown values fall back to [other] rather

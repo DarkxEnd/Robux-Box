@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// An in-app notification (`users/{uid}/notifications/{id}`).
 ///

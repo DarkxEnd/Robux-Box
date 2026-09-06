@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// One row of `leaderboards/{period}/entries/{uid}`, rebuilt by the scheduled
 /// `rebuildLeaderboards` job.

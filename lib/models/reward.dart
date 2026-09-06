@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../core/constants/app_constants.dart';
-import 'parse.dart';
+import 'model_utils.dart';
 
 /// What the user actually receives. Drives which fields the redemption form
 /// asks for: [robux] needs a Roblox username, the others need an email.
