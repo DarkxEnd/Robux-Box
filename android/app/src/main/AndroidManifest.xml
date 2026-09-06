@@ -54,13 +54,12 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- AdMob application id.
-             REPLACE with the real id from the AdMob console before shipping —
-             this is Google's public *test* id, which serves test ads only.
-             Format: ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY -->
+        <!-- AdMob application id, recovered from the shipped bundle. Must match
+             the AdMob console entry for com.robuxbox.app or the SDK throws on
+             initialisation. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-2788515829400980~2420412642" />
 
         <!-- Ads are not personalised for users known to be children. -->
         <meta-data
