@@ -46,11 +46,16 @@ dependencies:
   package_info_plus: ^8.1.1
   connectivity_plus: ^6.1.0
 
-  # Location → geo tier (server re-validates; client value is a UI hint only)
+  # Location → geo tier (server re-validates; client value is a UI hint only).
+  # geocoding turns the fix into an ISO country code without a network call of
+  # our own; geolocator alone only yields coordinates.
   geolocator: ^13.0.2
+  geocoding: ^3.0.0
+  permission_handler: ^11.3.1
 
   # Notifications
   flutter_local_notifications: ^18.0.1
+  path_provider: ^2.1.5
 
   # UI
   flutter_animate: ^4.5.2

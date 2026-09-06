@@ -108,7 +108,7 @@ service cloud.firestore {
     }
 
     // ----- support tickets -------------------------------------------------
-    match /support_tickets/{id} {
+    match /supportTickets/{id} {
       allow read: if signedIn() &&
         (resource.data.uid == request.auth.uid || isAdmin());
       allow create: if signedIn() &&
@@ -122,17 +122,17 @@ service cloud.firestore {
 
       match /messages/{msgId} {
         allow read: if signedIn() &&
-          (get(/databases/$(database)/documents/support_tickets/$(id)).data.uid
+          (get(/databases/$(database)/documents/supportTickets/$(id)).data.uid
             == request.auth.uid || isAdmin());
         allow create: if signedIn() &&
-          (get(/databases/$(database)/documents/support_tickets/$(id)).data.uid
+          (get(/databases/$(database)/documents/supportTickets/$(id)).data.uid
             == request.auth.uid || isAdmin()) &&
           request.resource.data.senderUid == request.auth.uid;
         allow update, delete: if isAdmin();
       }
     }
 
-    match /ticket_categories/{id} {
+    match /ticketCategories/{id} {
       allow read: if signedIn();
       allow write: if isAdmin();
     }

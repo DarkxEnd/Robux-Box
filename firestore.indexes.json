@@ -43,7 +43,7 @@
       ]
     },
     {
-      "collectionGroup": "support_tickets",
+      "collectionGroup": "supportTickets",
       "queryScope": "COLLECTION",
       "fields": [
         {"fieldPath": "uid", "order": "ASCENDING"},
@@ -51,7 +51,7 @@
       ]
     },
     {
-      "collectionGroup": "support_tickets",
+      "collectionGroup": "supportTickets",
       "queryScope": "COLLECTION",
       "fields": [
         {"fieldPath": "status", "order": "ASCENDING"},
