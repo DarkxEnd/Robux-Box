@@ -5,9 +5,9 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/l10n/gen/app_localizations.dart';
 import '../../../../core/theme/app_dimens.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/app_toast.dart';
 import '../../../../core/widgets/celebration.dart';
 import '../../../../core/widgets/glass_card.dart';
-import '../../../../core/widgets/app_toast.dart';
 import '../../../../models/app_user.dart';
 import '../../../earn/domain/earn_controller.dart';
 

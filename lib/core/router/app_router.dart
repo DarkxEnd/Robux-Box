@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../config/providers.dart';
 import '../../features/achievements/presentation/achievements_screen.dart';
 import '../../features/admin/presentation/admin_analytics_screen.dart';
 import '../../features/admin/presentation/admin_broadcast_screen.dart';
@@ -36,6 +35,7 @@ import '../../features/tasks/presentation/tasks_screen.dart';
 import '../../features/vip/presentation/vip_screen.dart';
 import '../../features/wallet/presentation/wallet_screen.dart';
 import '../../models/offerwall.dart';
+import '../config/providers.dart';
 import 'splash_screen.dart';
 
 /// Every route path in the app.

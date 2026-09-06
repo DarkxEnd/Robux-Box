@@ -70,7 +70,7 @@ class RewardCard extends StatelessWidget {
                           horizontal: AppDimens.sm,
                           vertical: 2,
                         ),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           gradient: AppTheme.coinGradient,
                           borderRadius: AppDimens.brPill,
                         ),

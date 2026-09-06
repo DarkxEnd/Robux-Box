@@ -12,6 +12,7 @@ import '../../../../core/widgets/animated_counter.dart';
 import '../../../../core/widgets/pressable.dart';
 import '../../../../models/app_user.dart';
 import '../../../../models/wallet.dart';
+import '../../../redemption/data/redemption_repository.dart';
 
 /// The balance card at the top of the home screen.
 class BalanceHeroCard extends ConsumerWidget {
@@ -24,6 +25,7 @@ class BalanceHeroCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final vip = user?.effectiveVipLevel ?? 'none';
+    final pending = ref.watch(pendingRedemptionCoinsProvider);
 
     // Integer division on purpose: showing "≈ 12.4 Robux" invites people to
     // expect fractional payouts that the reward catalogue cannot deliver.
@@ -115,7 +117,7 @@ class BalanceHeroCard extends ConsumerWidget {
                 fontSize: 13.5,
               ),
             ),
-            if (wallet.pendingRedemptionCoins > 0) ...[
+            if (pending > 0) ...[
               const SizedBox(height: AppDimens.md),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -135,8 +137,7 @@ class BalanceHeroCard extends ConsumerWidget {
                         // Explains a balance that dropped after a withdrawal
                         // request, which otherwise reads as coins going
                         // missing.
-                        '${l.walletPending}: '
-                        '${wallet.pendingRedemptionCoins} ${l.homeCoins}',
+                        '${l.walletPending}: $pending ${l.homeCoins}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,

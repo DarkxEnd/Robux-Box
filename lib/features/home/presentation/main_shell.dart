@@ -3,12 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/config/providers.dart';
-import '../../profile/data/user_repository.dart';
 import '../../../core/l10n/gen/app_localizations.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_dimens.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/connectivity_banner.dart';
+import '../../profile/data/user_repository.dart';
 
 /// The five-tab frame around the main screens.
 class MainShell extends ConsumerStatefulWidget {

@@ -32,7 +32,7 @@ class ReferralsScreen extends ConsumerWidget {
           const SizedBox(height: AppDimens.xl),
           Container(
             padding: const EdgeInsets.all(AppDimens.xl),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: AppTheme.brandGradient,
               borderRadius: AppDimens.brXl,
             ),

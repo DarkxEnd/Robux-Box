@@ -5,8 +5,8 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/error/result.dart';
-import '../../../core/utils/logger.dart';
 import '../../../core/services/callable_service.dart';
+import '../../../core/utils/logger.dart';
 
 /// Real-money VIP purchases.
 ///

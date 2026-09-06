@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/providers.dart';
@@ -86,7 +88,7 @@ class EarnController extends AutoDisposeNotifier<EarnState> {
     } finally {
       state = state.copyWith(status: EarnStatus.idle);
       // Preload the next ad so the following tap is instant.
-      ref.read(adsServiceProvider).preload(format);
+      unawaited(ref.read(adsServiceProvider).preload(format));
     }
   }
 

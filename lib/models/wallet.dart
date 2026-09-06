@@ -13,7 +13,6 @@ class Wallet extends Equatable {
     this.balance = 0,
     this.lifetimeEarned = 0,
     this.lifetimeSpent = 0,
-    this.pendingRedemptionCoins = 0,
     this.updatedAt,
   });
 
@@ -21,35 +20,34 @@ class Wallet extends Equatable {
       : balance = 0,
         lifetimeEarned = 0,
         lifetimeSpent = 0,
-        pendingRedemptionCoins = 0,
         updatedAt = null;
 
+  /// The stored field is `coins`, not `balance` — verified against both
+  /// functions/src/lib/wallet.ts and the shipped bundle. Reading `balance`
+  /// here silently shows every user a zero balance, which is exactly the bug
+  /// this comment exists to prevent recurring.
   factory Wallet.fromMap(String uid, Map<String, dynamic> map) => Wallet(
         uid: uid,
-        balance: Parse.toInt(map['balance']),
+        balance: Parse.toInt(map['coins']),
         lifetimeEarned: Parse.toInt(map['lifetimeEarned']),
         lifetimeSpent: Parse.toInt(map['lifetimeSpent']),
-        pendingRedemptionCoins: Parse.toInt(map['pendingRedemptionCoins']),
         updatedAt: Parse.toDate(map['updatedAt']),
       );
 
   final String uid;
 
-  /// Coins the user can spend right now. Coins locked in a pending redemption
-  /// have already been subtracted from this, so it never needs adjusting for
-  /// [pendingRedemptionCoins] at the call site.
+  /// Coins the user can spend right now.
+  ///
+  /// A redemption request debits this immediately — the server holds the coins
+  /// by taking them, not by flagging them — so a pending withdrawal is already
+  /// excluded here. See `pendingRedemptionCoinsProvider` for what is on hold.
   final int balance;
   final int lifetimeEarned;
   final int lifetimeSpent;
-
-  /// Coins held by redemptions awaiting fulfilment. Shown to the user so a
-  /// balance that dropped after a withdrawal request doesn't look like a loss.
-  final int pendingRedemptionCoins;
   final DateTime? updatedAt;
 
   bool canAfford(int coins) => balance >= coins;
 
   @override
-  List<Object?> get props =>
-      [uid, balance, lifetimeEarned, lifetimeSpent, pendingRedemptionCoins];
+  List<Object?> get props => [uid, balance, lifetimeEarned, lifetimeSpent];
 }

@@ -12,7 +12,6 @@ abstract final class Parse {
   static int toInt(Object? v, [int fallback = 0]) => switch (v) {
         final int i => i,
         final double d => d.round(),
-        final num n => n.toInt(),
         final String s => int.tryParse(s) ?? fallback,
         _ => fallback,
       };

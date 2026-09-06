@@ -14,6 +14,7 @@ import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../../models/transaction.dart';
 import '../../../models/wallet.dart';
+import '../../redemption/data/redemption_repository.dart';
 import '../data/wallet_repository.dart';
 
 /// Balance, totals and transaction history.
@@ -26,6 +27,7 @@ class WalletScreen extends ConsumerWidget {
     final wallet = ref.watch(walletProvider).valueOrNull ??
         const Wallet.empty('');
     final transactions = ref.watch(transactionsProvider);
+    final pending = ref.watch(pendingRedemptionCoinsProvider);
 
     return AppScaffold(
       title: l.walletTitle,
@@ -73,11 +75,11 @@ class WalletScreen extends ConsumerWidget {
                           color: AppTheme.warning,
                         ),
                       ),
-                      if (wallet.pendingRedemptionCoins > 0)
+                      if (pending > 0)
                         Expanded(
                           child: _Stat(
                             label: l.walletPending,
-                            value: wallet.pendingRedemptionCoins,
+                            value: pending,
                             color: AppTheme.accent,
                           ),
                         ),

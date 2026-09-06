@@ -7,7 +7,6 @@ import '../../../core/config/providers.dart';
 import '../../../core/l10n/gen/app_localizations.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_dimens.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/app_toast.dart';
 import '../../../core/widgets/google_logo.dart';

@@ -31,7 +31,9 @@ import 'firebase_options.dart';
 /// The whole body runs inside `runZonedGuarded` so an async error with no
 /// handler reaches Crashlytics rather than vanishing.
 Future<void> bootstrap() async {
-  runZonedGuarded(
+  // Deliberately not awaited: this is the app's root zone and runs for the
+  // process lifetime.
+  unawaited(runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
@@ -83,7 +85,7 @@ Future<void> bootstrap() async {
       log.e('uncaught zone error', error, stack);
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     },
-  );
+  ));
 }
 
 void _installErrorHandlers() {

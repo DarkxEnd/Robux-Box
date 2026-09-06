@@ -77,3 +77,16 @@ final myRedemptionsProvider = StreamProvider<List<Redemption>>((ref) {
   if (uid == null) return Stream.value(const []);
   return ref.watch(redemptionRepositoryProvider).watchMine(uid);
 });
+
+/// Coins currently held by unfinished withdrawal requests.
+///
+/// Derived rather than stored: the server holds coins by debiting the wallet
+/// outright, so there is no field to read. Showing this is what stops a
+/// balance that dropped after a request from looking like coins going
+/// missing.
+final pendingRedemptionCoinsProvider = Provider<int>((ref) {
+  final list = ref.watch(myRedemptionsProvider).valueOrNull ?? const [];
+  return list
+      .where((r) => !r.status.isTerminal)
+      .fold(0, (total, r) => total + r.coinCost);
+});

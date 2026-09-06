@@ -58,18 +58,18 @@ class _LuckyChestSheetState extends ConsumerState<LuckyChestSheet>
       ..reset();
     if (!mounted) return;
 
-    result.when(
+    unawaited(result.when(
       success: (earn) async {
         await ref.read(soundServiceProvider).celebrate();
         if (!mounted) return;
         Navigator.of(context).pop();
         await showEarnRewardDialog(context, coins: earn.coins);
       },
-      failure: (f) {
+      failure: (f) async {
         AppToast.failure(context, f);
         Navigator.of(context).pop();
       },
-    );
+    ));
 
     if (mounted) setState(() => _opening = false);
   }
