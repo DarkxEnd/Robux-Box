@@ -149,38 +149,41 @@ class AdsService {
       if (!completer.isCompleted) completer.complete(result);
     }
 
-    final callbacks = FullScreenContentCallback<AdWithoutView>(
-      onAdDismissedFullScreenContent: (ad) {
-        ad.dispose();
-        _clear(format);
-        // Preload the next one while the user is still on the screen.
-        unawaited(preload(format));
-        finish(
-          earned
-              ? const Result.success(null)
-              : const Result.failure(
-                  OperationFailure(
-                    'You need to watch the whole ad to earn coins.',
-                    code: 'ad-dismissed',
-                  ),
+    // Generic because each ad class declares its own
+    // FullScreenContentCallback<T>; one shared instance would not type-check.
+    FullScreenContentCallback<T> callbacks<T extends AdWithoutView>() =>
+        FullScreenContentCallback<T>(
+          onAdDismissedFullScreenContent: (ad) {
+            ad.dispose();
+            _clear(format);
+            // Preload the next one while the user is still on the screen.
+            unawaited(preload(format));
+            finish(
+              earned
+                  ? const Result.success(null)
+                  : const Result.failure(
+                      OperationFailure(
+                        'You need to watch the whole ad to earn coins.',
+                        code: 'ad-dismissed',
+                      ),
+                    ),
+            );
+          },
+          onAdFailedToShowFullScreenContent: (ad, err) {
+            log.w('ad failed to show: ${err.code} ${err.message}');
+            ad.dispose();
+            _clear(format);
+            unawaited(preload(format));
+            finish(
+              const Result.failure(
+                OperationFailure(
+                  'That ad could not be shown. Please try again.',
+                  code: 'ad-show-failed',
                 ),
+              ),
+            );
+          },
         );
-      },
-      onAdFailedToShowFullScreenContent: (ad, err) {
-        log.w('ad failed to show: ${err.code} ${err.message}');
-        ad.dispose();
-        _clear(format);
-        unawaited(preload(format));
-        finish(
-          const Result.failure(
-            OperationFailure(
-              'That ad could not be shown. Please try again.',
-              code: 'ad-show-failed',
-            ),
-          ),
-        );
-      },
-    );
 
     final ssv = ServerSideVerificationOptions(userId: uid, customData: nonce);
 
@@ -188,13 +191,13 @@ class AdsService {
       switch (format) {
         case AdFormat.rewarded:
           final ad = _rewarded!
-            ..fullScreenContentCallback = callbacks
-            ..setServerSideVerificationOptions(ssv);
+            ..fullScreenContentCallback = callbacks<RewardedAd>();
+          await ad.setServerSideOptions(ssv);
           await ad.show(onUserEarnedReward: (_, __) => earned = true);
         case AdFormat.interstitial:
           final ad = _rewardedInterstitial!
-            ..fullScreenContentCallback = callbacks
-            ..setServerSideVerificationOptions(ssv);
+            ..fullScreenContentCallback = callbacks<RewardedInterstitialAd>();
+          await ad.setServerSideOptions(ssv);
           await ad.show(onUserEarnedReward: (_, __) => earned = true);
       }
     } catch (e, s) {

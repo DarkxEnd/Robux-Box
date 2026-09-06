@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:in_app_purchase/in_app_purchase.dart';
 
-import '../constants/app_constants.dart';
-import '../error/failure.dart';
-import '../error/result.dart';
-import '../utils/logger.dart';
-import 'callable_service.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/error/failure.dart';
+import '../../../core/error/result.dart';
+import '../../../core/utils/logger.dart';
+import '../../../core/services/callable_service.dart';
 
 /// Real-money VIP purchases.
 ///
@@ -15,8 +15,8 @@ import 'callable_service.dart';
 /// Developer API server-side before granting anything — a client that claims
 /// "purchased" gets nothing. Consequently the UI must wait for the callable,
 /// not for the store callback.
-class PurchaseService {
-  PurchaseService(this._callables, {InAppPurchase? iap})
+class VipIapService {
+  VipIapService(this._callables, {InAppPurchase? iap})
       : _iap = iap ?? InAppPurchase.instance;
 
   final CallableService _callables;
