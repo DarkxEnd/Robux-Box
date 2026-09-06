@@ -1,0 +1,209 @@
+rules_version = '2';
+
+// ---------------------------------------------------------------------------
+// Robux Box — Firestore security rules.
+//
+// The client is UNTRUSTED. Anything of value (balances, transactions,
+// redemption state, tiers, VIP, fraud data) is written ONLY by Cloud Functions
+// running the Admin SDK, which bypasses these rules. Clients can read what is
+// theirs and request actions through callables; they can never mint coins.
+//
+// A default-deny rule at the bottom closes everything not explicitly allowed,
+// so adding a collection without thinking about it fails safe.
+// ---------------------------------------------------------------------------
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    // Fields a user may edit on their own profile. Everything economic
+    // (vipLevel, xp, level, status, countryCode, adsWatchedToday, streaks,
+    // isAdmin, referralRewarded…) is deliberately excluded.
+    function onlySafeProfileFields() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['displayName', 'photoUrl', 'robloxUsername', 'locale',
+                  'fcmToken', 'notificationPrefs', 'referredBy', 'updatedAt']);
+    }
+
+    // ----- users -----------------------------------------------------------
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      // Creation is done by the onUserCreated trigger; a client may only
+      // patch its own safe display fields afterwards.
+      allow update: if (isOwner(uid) && onlySafeProfileFields()) || isAdmin();
+      allow create, delete: if isAdmin();
+
+      match /transactions/{txId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow write: if false; // ledger is append-only, server-side
+      }
+
+      match /notifications/{nId} {
+        allow read: if isOwner(uid) || isAdmin();
+        // Marking as read is the only client-side mutation allowed.
+        allow update: if isOwner(uid) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+        allow create, delete: if false;
+      }
+
+      match /achievements/{aId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow write: if false;
+      }
+
+      match /devices/{dId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow write: if false; // recorded server-side from earn calls
+      }
+    }
+
+    // ----- wallets ---------------------------------------------------------
+    match /wallets/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if false;
+    }
+
+    // ----- catalogue (public read) ----------------------------------------
+    match /rewards/{rewardId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /offers/{offerId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /banners/{bannerId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /achievements/{achievementId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /leaderboards/{boardId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // ----- redemptions -----------------------------------------------------
+    match /redemptions/{id} {
+      // Users see their own history; only Cloud Functions change status.
+      allow read: if signedIn() &&
+        (resource.data.uid == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    // ----- support tickets -------------------------------------------------
+    match /support_tickets/{id} {
+      allow read: if signedIn() &&
+        (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if signedIn() &&
+        request.resource.data.uid == request.auth.uid &&
+        request.resource.data.status == 'open';
+      allow update: if isAdmin() ||
+        (signedIn() && resource.data.uid == request.auth.uid &&
+         request.resource.data.diff(resource.data).affectedKeys()
+           .hasOnly(['updatedAt', 'lastUserMessageAt']));
+      allow delete: if isAdmin();
+
+      match /messages/{msgId} {
+        allow read: if signedIn() &&
+          (get(/databases/$(database)/documents/support_tickets/$(id)).data.uid
+            == request.auth.uid || isAdmin());
+        allow create: if signedIn() &&
+          (get(/databases/$(database)/documents/support_tickets/$(id)).data.uid
+            == request.auth.uid || isAdmin()) &&
+          request.resource.data.senderUid == request.auth.uid;
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    match /ticket_categories/{id} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ----- config (public read of non-secret docs) -------------------------
+    match /config/{docId} {
+      // `notifications` holds admin email addresses — admin-only.
+      allow read: if signedIn() && docId != 'notifications';
+      allow write: if isAdmin();
+    }
+
+    match /geo_tiers/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ----- admin-only / server-only ---------------------------------------
+    match /promocodes/{code} {
+      // Codes are redeemed through a callable; reading them would leak every
+      // active code to any signed-in user.
+      allow read, write: if isAdmin();
+
+      match /redemptions/{uid} {
+        allow read, write: if isAdmin();
+      }
+    }
+
+    match /vip_purchases/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /offer_completions/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /ad_impressions/{id} {
+      allow read, write: if false; // server-only, written by the SSV callback
+    }
+
+    match /fraud_flags/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /audit_logs/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /analytics/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /nonces/{id} {
+      allow read, write: if false;
+    }
+
+    match /rate_limits/{id} {
+      allow read, write: if false;
+    }
+
+    match /mail/{id} {
+      allow read, write: if false; // Trigger Email extension queue
+    }
+
+    // ----- default deny ----------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
