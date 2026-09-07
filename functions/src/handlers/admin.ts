@@ -25,9 +25,9 @@ export const setAdminClaim = onCall(CALLABLE_OPTS, async (req) => {
   const isAdmin = req.auth?.token?.admin === true;
   if (!isAdmin) {
     const bootstrap = (process.env.ADMIN_BOOTSTRAP_EMAIL ?? "")
-      .split(",")
-      .map((e) => e.trim().toLowerCase())
-      .filter(Boolean);
+        .split(",")
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean);
     const email = String(req.auth?.token?.email ?? "").toLowerCase();
     const allowed = email && bootstrap.includes(email) && targetUid === callerUid;
     if (!allowed) {
@@ -37,8 +37,8 @@ export const setAdminClaim = onCall(CALLABLE_OPTS, async (req) => {
 
   await auth.setCustomUserClaims(targetUid, {admin: makeAdmin});
   await userDoc(targetUid).set(
-    {isAdmin: makeAdmin, updatedAt: Timestamp.now()},
-    {merge: true},
+      {isAdmin: makeAdmin, updatedAt: Timestamp.now()},
+      {merge: true},
   );
   await auditLog(callerUid, "set_admin_claim", {targetUid, admin: makeAdmin});
   return {ok: true, uid: targetUid, admin: makeAdmin};
@@ -86,8 +86,8 @@ export const setAccountStatus = onCall(CALLABLE_OPTS, async (req) => {
   }
 
   await userDoc(uid).set(
-    {status, statusReason: reason || null, updatedAt: Timestamp.now()},
-    {merge: true},
+      {status, statusReason: reason || null, updatedAt: Timestamp.now()},
+      {merge: true},
   );
   // Disabling the Auth user too stops an existing session from continuing to
   // hold a valid ID token until it expires.
@@ -106,8 +106,8 @@ export const setVipLevel = onCall(CALLABLE_OPTS, async (req) => {
   }
 
   await userDoc(uid).set(
-    {vipLevel: level, vipExpiresAt: null, updatedAt: Timestamp.now()},
-    {merge: true},
+      {vipLevel: level, vipExpiresAt: null, updatedAt: Timestamp.now()},
+      {merge: true},
   );
   await auditLog(actor, "set_vip_level", {uid, level});
   await sendUserNotification(uid, {
@@ -129,8 +129,8 @@ export const setUserLevel = onCall(CALLABLE_OPTS, async (req) => {
   if (!uid) throw new HttpsError("invalid-argument", "Provide a uid.");
 
   await userDoc(uid).set(
-    {level, xp: cumulativeXpForLevel(level), updatedAt: Timestamp.now()},
-    {merge: true},
+      {level, xp: cumulativeXpForLevel(level), updatedAt: Timestamp.now()},
+      {merge: true},
   );
   await auditLog(actor, "set_user_level", {uid, level});
   return {ok: true, level};
@@ -144,15 +144,15 @@ export const upsertPromocode = onCall(CALLABLE_OPTS, async (req) => {
 
   const expiresAtMillis = Number(req.data?.expiresAt ?? 0);
   await cols.promocodes.doc(code).set(
-    {
-      rewardCoins: Number(req.data?.rewardCoins ?? 0),
-      maxRedemptions: Number(req.data?.maxRedemptions ?? -1),
-      perUserLimit: Number(req.data?.perUserLimit ?? 1),
-      isActive: req.data?.isActive !== false,
-      expiresAt: expiresAtMillis ? Timestamp.fromMillis(expiresAtMillis) : null,
-      updatedAt: Timestamp.now(),
-    },
-    {merge: true},
+      {
+        rewardCoins: Number(req.data?.rewardCoins ?? 0),
+        maxRedemptions: Number(req.data?.maxRedemptions ?? -1),
+        perUserLimit: Number(req.data?.perUserLimit ?? 1),
+        isActive: req.data?.isActive !== false,
+        expiresAt: expiresAtMillis ? Timestamp.fromMillis(expiresAtMillis) : null,
+        updatedAt: Timestamp.now(),
+      },
+      {merge: true},
   );
 
   await auditLog(actor, "upsert_promocode", {code});
@@ -167,85 +167,85 @@ export const upsertPromocode = onCall(CALLABLE_OPTS, async (req) => {
  * nobody was a real bug here once.
  */
 export const broadcastNotification = onCall(
-  {...CALLABLE_OPTS, timeoutSeconds: 540, memory: "512MiB"},
-  async (req) => {
-    const actor = requireAdmin(req);
-    const title = String(req.data?.title ?? "").trim();
-    const body = String(req.data?.body ?? "").trim();
-    const audience = String(req.data?.audience ?? "all");
-    const deeplink = String(req.data?.deeplink ?? "");
-    if (!title || !body) {
-      throw new HttpsError("invalid-argument", "Title and body are required.");
-    }
-
-    let query: FirebaseFirestore.Query = cols.users;
-    if (audience === "vip") {
-      query = query.where("vipLevel", "in", ["bronze", "silver", "gold", "diamond"]);
-    } else if (audience === "non_vip") {
-      query = query.where("vipLevel", "==", "none");
-    }
-
-    const snap = await query.select().get();
-    const uids = snap.docs.map((d) => d.id);
-
-    let written = 0;
-    for (let i = 0; i < uids.length; i += 400) {
-      const batch = cols.users.firestore.batch();
-      for (const uid of uids.slice(i, i + 400)) {
-        batch.set(subcols.notifications(uid).doc(), {
-          type: "system",
-          title,
-          body,
-          deeplink: deeplink || null,
-          read: false,
-          createdAt: Timestamp.now(),
-        });
+    {...CALLABLE_OPTS, timeoutSeconds: 540, memory: "512MiB"},
+    async (req) => {
+      const actor = requireAdmin(req);
+      const title = String(req.data?.title ?? "").trim();
+      const body = String(req.data?.body ?? "").trim();
+      const audience = String(req.data?.audience ?? "all");
+      const deeplink = String(req.data?.deeplink ?? "");
+      if (!title || !body) {
+        throw new HttpsError("invalid-argument", "Title and body are required.");
       }
-      await batch.commit();
-      written += Math.min(400, uids.length - i);
-    }
 
-    await auditLog(actor, "broadcast", {audience, title, recipients: written});
-    return {ok: true, recipients: written};
-  },
+      let query: FirebaseFirestore.Query = cols.users;
+      if (audience === "vip") {
+        query = query.where("vipLevel", "in", ["bronze", "silver", "gold", "diamond"]);
+      } else if (audience === "non_vip") {
+        query = query.where("vipLevel", "==", "none");
+      }
+
+      const snap = await query.select().get();
+      const uids = snap.docs.map((d) => d.id);
+
+      let written = 0;
+      for (let i = 0; i < uids.length; i += 400) {
+        const batch = cols.users.firestore.batch();
+        for (const uid of uids.slice(i, i + 400)) {
+          batch.set(subcols.notifications(uid).doc(), {
+            type: "system",
+            title,
+            body,
+            deeplink: deeplink || null,
+            read: false,
+            createdAt: Timestamp.now(),
+          });
+        }
+        await batch.commit();
+        written += Math.min(400, uids.length - i);
+      }
+
+      await auditLog(actor, "broadcast", {audience, title, recipients: written});
+      return {ok: true, recipients: written};
+    },
 );
 
 /** Admin: recomputes the dashboard analytics document on demand. */
 export const refreshAnalytics = onCall(
-  {...CALLABLE_OPTS, timeoutSeconds: 300},
-  async (req) => {
-    const actor = requireAdmin(req);
+    {...CALLABLE_OPTS, timeoutSeconds: 300},
+    async (req) => {
+      const actor = requireAdmin(req);
 
-    const [users, wallets, pending, completions] = await Promise.all([
-      cols.users.count().get(),
-      cols.wallets.count().get(),
-      cols.redemptions.where("status", "==", "pending").count().get(),
-      cols.offerCompletions.count().get(),
-    ]);
+      const [users, wallets, pending, completions] = await Promise.all([
+        cols.users.count().get(),
+        cols.wallets.count().get(),
+        cols.redemptions.where("status", "==", "pending").count().get(),
+        cols.offerCompletions.count().get(),
+      ]);
 
-    const walletSnap = await cols.wallets.select("coins", "lifetimeEarned").get();
-    let coinsOutstanding = 0;
-    let lifetimeEarned = 0;
-    for (const d of walletSnap.docs) {
-      coinsOutstanding += (d.data().coins as number) ?? 0;
-      lifetimeEarned += (d.data().lifetimeEarned as number) ?? 0;
-    }
+      const walletSnap = await cols.wallets.select("coins", "lifetimeEarned").get();
+      let coinsOutstanding = 0;
+      let lifetimeEarned = 0;
+      for (const d of walletSnap.docs) {
+        coinsOutstanding += (d.data().coins as number) ?? 0;
+        lifetimeEarned += (d.data().lifetimeEarned as number) ?? 0;
+      }
 
-    const summary = {
-      users: users.data().count,
-      wallets: wallets.data().count,
-      pendingRedemptions: pending.data().count,
-      offerCompletions: completions.data().count,
-      coinsOutstanding,
-      lifetimeEarned,
-      robuxEquivalent: Math.floor(coinsOutstanding / ECONOMY.coinsPerRobux),
-      updatedAt: Timestamp.now(),
-    };
+      const summary = {
+        users: users.data().count,
+        wallets: wallets.data().count,
+        pendingRedemptions: pending.data().count,
+        offerCompletions: completions.data().count,
+        coinsOutstanding,
+        lifetimeEarned,
+        robuxEquivalent: Math.floor(coinsOutstanding / ECONOMY.coinsPerRobux),
+        updatedAt: Timestamp.now(),
+      };
 
-    await cols.analytics.doc("summary").set(summary, {merge: true});
-    await auditLog(actor, "refresh_analytics", {});
-    return summary;
-  },
+      await cols.analytics.doc("summary").set(summary, {merge: true});
+      await auditLog(actor, "refresh_analytics", {});
+      return summary;
+    },
 );
 
 /** Admin: paginated user list for the dashboard. */
@@ -262,14 +262,14 @@ export const listUsers = onCall(CALLABLE_OPTS, async (req) => {
 
   const snap = await q.get();
   const items = await Promise.all(
-    snap.docs.map(async (d) => {
-      const w = await walletDoc(d.id).get();
-      return {
-        uid: d.id,
-        ...d.data(),
-        coins: (w.data()?.coins as number) ?? 0,
-      };
-    }),
+      snap.docs.map(async (d) => {
+        const w = await walletDoc(d.id).get();
+        return {
+          uid: d.id,
+          ...d.data(),
+          coins: (w.data()?.coins as number) ?? 0,
+        };
+      }),
   );
 
   return {items, nextCursor: snap.docs.at(-1)?.id ?? null};

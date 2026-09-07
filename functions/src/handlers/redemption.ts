@@ -34,8 +34,8 @@ export const requestRedemption = onCall(CALLABLE_OPTS, async (req) => {
   if (!rewardId) throw new HttpsError("invalid-argument", "Pick a reward.");
   if (!destination) {
     throw new HttpsError(
-      "invalid-argument",
-      "Enter where the reward should be sent (e.g. your Roblox username).",
+        "invalid-argument",
+        "Enter where the reward should be sent (e.g. your Roblox username).",
     );
   }
 
@@ -93,8 +93,8 @@ export const requestRedemption = onCall(CALLABLE_OPTS, async (req) => {
     deeplink: "/redemptions",
   });
   await notifyAdmins(
-    "New redemption request",
-    `User ${uid} requested ${reward.title ?? rewardId} (${cost} coins).`,
+      "New redemption request",
+      `User ${uid} requested ${reward.title ?? rewardId} (${cost} coins).`,
   );
 
   return {id: doc.id, status: "pending"};
@@ -115,8 +115,8 @@ export const cancelRedemption = onCall(CALLABLE_OPTS, async (req) => {
   }
 
   await ref.set(
-    {status: "cancelled", updatedAt: Timestamp.now()},
-    {merge: true},
+      {status: "cancelled", updatedAt: Timestamp.now()},
+      {merge: true},
   );
   await creditWallet({
     uid,
@@ -151,14 +151,14 @@ export const processRedemption = onCall(CALLABLE_OPTS, async (req) => {
   }
 
   await ref.set(
-    {
-      status,
-      adminNote: note || null,
-      processedBy: actor,
-      updatedAt: Timestamp.now(),
-      ...(status === "paid" ? {paidAt: Timestamp.now()} : {}),
-    },
-    {merge: true},
+      {
+        status,
+        adminNote: note || null,
+        processedBy: actor,
+        updatedAt: Timestamp.now(),
+        ...(status === "paid" ? {paidAt: Timestamp.now()} : {}),
+      },
+      {merge: true},
   );
 
   if (status === "rejected") {

@@ -106,7 +106,7 @@ export const getOfferwallUrl = onCall(CALLABLE_OPTS, async (req) => {
   const username = req.auth?.token?.name;
   return {
     url: cpxWallUrl(
-      uid,
+        uid,
       email ? String(email) : undefined,
       username ? String(username) : undefined,
     ),
@@ -144,8 +144,8 @@ async function recordOfferCompletion(args: {
     // be spent, so this isn't auto-clawed-back from the wallet.
     if (isReversal && !prev.reversed) {
       await compRef.set(
-        {reversed: true, reversedAt: Timestamp.now()},
-        {merge: true},
+          {reversed: true, reversedAt: Timestamp.now()},
+          {merge: true},
       );
       await flagFraud(uid, "offerwall_reversed", {
         transId, coins: prev.coins ?? 0, payoutUsd,
@@ -174,8 +174,8 @@ async function recordOfferCompletion(args: {
   // Convert provider payout → coins with the user share (developer margin).
   const grossCoins = Math.round(payoutUsd * ECONOMY.coinsPerRobux * 10);
   const coins = Math.max(
-    1,
-    Math.round(grossCoins * ECONOMY.offerwallUserSharePercent *
+      1,
+      Math.round(grossCoins * ECONOMY.offerwallUserSharePercent *
       (tierLevel === 1 ? 1 : 0.9)),
   );
 
@@ -218,46 +218,46 @@ async function recordOfferCompletion(args: {
  *   sub_id_2, amount_local, amount_usd, offer_id, hash, ip_click
  */
 export const offerwallPostback = onRequest(
-  {region: "us-central1", cors: false},
-  async (req, res) => {
-    try {
-      const q = {...req.query, ...req.body} as Record<string, string>;
-      const uid = String(q.user_id ?? "");
-      const transId = String(q.trans_id ?? "");
-      const hash = String(q.hash ?? "");
-      const status = String(q.status ?? "1");
-      // `|| 0` guards a missing/garbled amount: NaN would otherwise flow into
-      // the coin maths and Firestore rejects NaN, failing the whole postback.
-      const payoutUsd = parseFloat(String(q.amount_usd ?? "0")) || 0;
-      const offerId = String(q.offer_id ?? "");
-      const offerName = offerId ? `CPX Survey #${offerId}` : "CPX Survey";
+    {region: "us-central1", cors: false},
+    async (req, res) => {
+      try {
+        const q = {...req.query, ...req.body} as Record<string, string>;
+        const uid = String(q.user_id ?? "");
+        const transId = String(q.trans_id ?? "");
+        const hash = String(q.hash ?? "");
+        const status = String(q.status ?? "1");
+        // `|| 0` guards a missing/garbled amount: NaN would otherwise flow into
+        // the coin maths and Firestore rejects NaN, failing the whole postback.
+        const payoutUsd = parseFloat(String(q.amount_usd ?? "0")) || 0;
+        const offerId = String(q.offer_id ?? "");
+        const offerName = offerId ? `CPX Survey #${offerId}` : "CPX Survey";
 
-      if (!uid || !transId) {
-        res.status(400).send("missing params");
-        return;
+        if (!uid || !transId) {
+          res.status(400).send("missing params");
+          return;
+        }
+
+        // Verify CPX's signature: md5(trans_id-secret).
+        if (!secretsMatch(hash, md5(`${transId}-${cpxSecureHashSecret()}`))) {
+          await flagFraud(uid, "offerwall_bad_signature", {transId});
+          res.status(403).send("bad signature");
+          return;
+        }
+
+        const outcome = await recordOfferCompletion({
+          docId: transId,
+          uid,
+          transId,
+          offerName,
+          payoutUsd,
+          isReversal: status === "2",
+        });
+        res.status(outcome.status).send(outcome.body);
+      } catch (e) {
+        console.error("offerwallPostback error", e);
+        res.status(500).send("error");
       }
-
-      // Verify CPX's signature: md5(trans_id-secret).
-      if (!secretsMatch(hash, md5(`${transId}-${cpxSecureHashSecret()}`))) {
-        await flagFraud(uid, "offerwall_bad_signature", {transId});
-        res.status(403).send("bad signature");
-        return;
-      }
-
-      const outcome = await recordOfferCompletion({
-        docId: transId,
-        uid,
-        transId,
-        offerName,
-        payoutUsd,
-        isReversal: status === "2",
-      });
-      res.status(outcome.status).send(outcome.body);
-    } catch (e) {
-      console.error("offerwallPostback error", e);
-      res.status(500).send("error");
-    }
-  },
+    },
 );
 
 /**
@@ -282,49 +282,49 @@ export const offerwallPostback = onRequest(
  * CPAlead macro can mark one reversed, but nothing sends it today.
  */
 export const cpaleadPostback = onRequest(
-  {region: "us-central1", cors: false},
-  async (req, res) => {
-    try {
-      const q = {...req.query, ...req.body} as Record<string, string>;
-      const expected = process.env.CPALEAD_POSTBACK_SECRET ?? "";
-      if (!expected) {
-        console.error("cpaleadPostback: CPALEAD_POSTBACK_SECRET is not set");
-        res.status(503).send("not configured");
-        return;
-      }
-      if (!secretsMatch(String(q.secret ?? ""), expected)) {
-        res.status(403).send("bad secret");
-        return;
-      }
+    {region: "us-central1", cors: false},
+    async (req, res) => {
+      try {
+        const q = {...req.query, ...req.body} as Record<string, string>;
+        const expected = process.env.CPALEAD_POSTBACK_SECRET ?? "";
+        if (!expected) {
+          console.error("cpaleadPostback: CPALEAD_POSTBACK_SECRET is not set");
+          res.status(503).send("not configured");
+          return;
+        }
+        if (!secretsMatch(String(q.secret ?? ""), expected)) {
+          res.status(403).send("bad secret");
+          return;
+        }
 
-      const uid = String(q.subid ?? "");
-      const transId = String(q.trans_id ?? "");
-      if (!uid || !transId) {
-        res.status(400).send("missing params");
-        return;
-      }
+        const uid = String(q.subid ?? "");
+        const transId = String(q.trans_id ?? "");
+        if (!uid || !transId) {
+          res.status(400).send("missing params");
+          return;
+        }
 
-      const offerId = String(q.offer_id ?? "");
-      const rawName = String(q.offer_name ?? "").trim();
-      const offerName = rawName ||
+        const offerId = String(q.offer_id ?? "");
+        const rawName = String(q.offer_name ?? "").trim();
+        const offerName = rawName ||
         (offerId ? `CPAlead Offer #${offerId}` : "CPAlead Offer");
-      const status = String(q.status ?? "").toLowerCase();
+        const status = String(q.status ?? "").toLowerCase();
 
-      const outcome = await recordOfferCompletion({
-        docId: `cpalead_${transId}`,
-        uid,
-        transId,
-        offerName,
-        payoutUsd: parseFloat(String(q.payout ?? "0")) || 0,
-        isReversal: status === "2" || status === "reversed" ||
+        const outcome = await recordOfferCompletion({
+          docId: `cpalead_${transId}`,
+          uid,
+          transId,
+          offerName,
+          payoutUsd: parseFloat(String(q.payout ?? "0")) || 0,
+          isReversal: status === "2" || status === "reversed" ||
           status === "chargeback",
-      });
-      res.status(outcome.status).send(outcome.body);
-    } catch (e) {
-      console.error("cpaleadPostback error", e);
-      res.status(500).send("error");
-    }
-  },
+        });
+        res.status(outcome.status).send(outcome.body);
+      } catch (e) {
+        console.error("cpaleadPostback error", e);
+        res.status(500).send("error");
+      }
+    },
 );
 
 /**
@@ -348,49 +348,49 @@ export const cpaleadPostback = onRequest(
  * word "approved", so word variants are matched too rather than only "0".
  */
 export const lootwallsPostback = onRequest(
-  {region: "us-central1", cors: false},
-  async (req, res) => {
-    try {
-      const q = {...req.query, ...req.body} as Record<string, string>;
-      // Never log `secret`.
-      console.log("lootwallsPostback received", {
-        user_id: q.user_id, payout: q.payout, status: q.status,
-        txn_id: q.txn_id,
-      });
-      const expected = process.env.LOOTWALLS_POSTBACK_SECRET ?? "";
-      if (!expected) {
-        console.error("lootwallsPostback: LOOTWALLS_POSTBACK_SECRET is not set");
-        res.status(503).send("not configured");
-        return;
-      }
-      if (!secretsMatch(String(q.secret ?? ""), expected)) {
-        res.status(403).send("bad secret");
-        return;
-      }
+    {region: "us-central1", cors: false},
+    async (req, res) => {
+      try {
+        const q = {...req.query, ...req.body} as Record<string, string>;
+        // Never log `secret`.
+        console.log("lootwallsPostback received", {
+          user_id: q.user_id, payout: q.payout, status: q.status,
+          txn_id: q.txn_id,
+        });
+        const expected = process.env.LOOTWALLS_POSTBACK_SECRET ?? "";
+        if (!expected) {
+          console.error("lootwallsPostback: LOOTWALLS_POSTBACK_SECRET is not set");
+          res.status(503).send("not configured");
+          return;
+        }
+        if (!secretsMatch(String(q.secret ?? ""), expected)) {
+          res.status(403).send("bad secret");
+          return;
+        }
 
-      const uid = String(q.user_id ?? "");
-      const transId = String(q.txn_id ?? "");
-      if (!uid || !transId) {
-        res.status(400).send("missing params");
-        return;
-      }
+        const uid = String(q.user_id ?? "");
+        const transId = String(q.txn_id ?? "");
+        if (!uid || !transId) {
+          res.status(400).send("missing params");
+          return;
+        }
 
-      const statusVal = String(q.status ?? "1").toLowerCase();
-      const outcome = await recordOfferCompletion({
-        docId: `lootwalls_${transId}`,
-        uid,
-        transId,
-        offerName: "Lootwalls Offer",
-        payoutUsd: parseFloat(String(q.payout ?? "0")) || 0,
-        isReversal: ["0", "reversed", "declined", "rejected", "cancelled",
-          "canceled"].includes(statusVal),
-      });
-      res.status(outcome.status).send(outcome.body);
-    } catch (e) {
-      console.error("lootwallsPostback error", e);
-      res.status(500).send("error");
-    }
-  },
+        const statusVal = String(q.status ?? "1").toLowerCase();
+        const outcome = await recordOfferCompletion({
+          docId: `lootwalls_${transId}`,
+          uid,
+          transId,
+          offerName: "Lootwalls Offer",
+          payoutUsd: parseFloat(String(q.payout ?? "0")) || 0,
+          isReversal: ["0", "reversed", "declined", "rejected", "cancelled",
+            "canceled"].includes(statusVal),
+        });
+        res.status(outcome.status).send(outcome.body);
+      } catch (e) {
+        console.error("lootwallsPostback error", e);
+        res.status(500).send("error");
+      }
+    },
 );
 
 /**
@@ -410,36 +410,36 @@ export const lootwallsPostback = onRequest(
  * a 4xx there blocks saving the callback URL at all.
  */
 export const admobSsv = onRequest(
-  {region: "us-central1", cors: false},
-  async (req, res) => {
-    try {
-      const q = req.query as Record<string, string>;
-      const nonce = String(q.custom_data ?? "");
-      const userId = String(q.user_id ?? "");
-      if (!nonce) {
-        res.status(200).send("ok — no custom_data, nothing to record");
-        return;
-      }
+    {region: "us-central1", cors: false},
+    async (req, res) => {
+      try {
+        const q = req.query as Record<string, string>;
+        const nonce = String(q.custom_data ?? "");
+        const userId = String(q.user_id ?? "");
+        if (!nonce) {
+          res.status(200).send("ok — no custom_data, nothing to record");
+          return;
+        }
 
-      const rawQuery = String(req.url.split("?")[1] ?? "");
-      const verified = await verifyAdmobSignature(rawQuery);
-      if (!verified) {
-        await flagFraud(userId || "unknown", "admob_ssv_bad_signature", {nonce});
-      }
+        const rawQuery = String(req.url.split("?")[1] ?? "");
+        const verified = await verifyAdmobSignature(rawQuery);
+        if (!verified) {
+          await flagFraud(userId || "unknown", "admob_ssv_bad_signature", {nonce});
+        }
 
-      await cols.adImpressions.doc(nonce).set({
-        uid: userId,
-        adUnit: String(q.ad_unit ?? ""),
-        rewardAmount: parseInt(String(q.reward_amount ?? "0"), 10),
-        rewardItem: String(q.reward_item ?? ""),
-        transactionId: String(q.transaction_id ?? ""),
-        verified,
-        createdAt: Timestamp.now(),
-      });
-      res.status(200).send("ok");
-    } catch (e) {
-      console.error("admobSsv error", e);
-      res.status(500).send("error");
-    }
-  },
+        await cols.adImpressions.doc(nonce).set({
+          uid: userId,
+          adUnit: String(q.ad_unit ?? ""),
+          rewardAmount: parseInt(String(q.reward_amount ?? "0"), 10),
+          rewardItem: String(q.reward_item ?? ""),
+          transactionId: String(q.transaction_id ?? ""),
+          verified,
+          createdAt: Timestamp.now(),
+        });
+        res.status(200).send("ok");
+      } catch (e) {
+        console.error("admobSsv error", e);
+        res.status(500).send("error");
+      }
+    },
 );

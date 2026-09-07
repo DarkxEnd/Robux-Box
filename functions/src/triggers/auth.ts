@@ -16,38 +16,38 @@ export const onUserCreated = functionsV1.auth.user().onCreate(async (user) => {
   const referralCode = uid.slice(0, 6).toUpperCase();
 
   await userDoc(uid).set(
-    {
-      uid,
-      email: user.email ?? null,
-      displayName: user.displayName ?? null,
-      photoUrl: user.photoURL ?? null,
-      phoneNumber: user.phoneNumber ?? null,
-      status: "active",
-      vipLevel: "none",
-      vipExpiresAt: null,
-      xp: 0,
-      level: 0,
-      dailyStreak: 0,
-      adsWatchedToday: 0,
-      referralCode,
-      referredBy: null,
-      isAdmin: false,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    },
-    {merge: true},
+      {
+        uid,
+        email: user.email ?? null,
+        displayName: user.displayName ?? null,
+        photoUrl: user.photoURL ?? null,
+        phoneNumber: user.phoneNumber ?? null,
+        status: "active",
+        vipLevel: "none",
+        vipExpiresAt: null,
+        xp: 0,
+        level: 0,
+        dailyStreak: 0,
+        adsWatchedToday: 0,
+        referralCode,
+        referredBy: null,
+        isAdmin: false,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      },
+      {merge: true},
   );
 
   await walletDoc(uid).set(
-    {
-      uid,
-      coins: 0,
-      lifetimeEarned: 0,
-      lifetimeSpent: 0,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    },
-    {merge: true},
+      {
+        uid,
+        coins: 0,
+        lifetimeEarned: 0,
+        lifetimeSpent: 0,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      },
+      {merge: true},
   );
 
   await sendUserNotification(uid, {
@@ -64,54 +64,54 @@ export const onUserCreated = functionsV1.auth.user().onCreate(async (user) => {
  * can't be used to farm the bonus.
  */
 export const applyReferralOnProfile = onDocumentUpdated(
-  {document: "users/{uid}", region: "us-central1"},
-  async (event) => {
-    const before = event.data?.before.data() ?? {};
-    const after = event.data?.after.data() ?? {};
-    const uid = event.params.uid as string;
+    {document: "users/{uid}", region: "us-central1"},
+    async (event) => {
+      const before = event.data?.before.data() ?? {};
+      const after = event.data?.after.data() ?? {};
+      const uid = event.params.uid as string;
 
-    const code = after.referredBy as string | undefined;
-    if (!code) return;
-    if (before.referredBy === after.referredBy) return;
-    if (after.referralRewarded === true) return;
+      const code = after.referredBy as string | undefined;
+      if (!code) return;
+      if (before.referredBy === after.referredBy) return;
+      if (after.referralRewarded === true) return;
 
-    const refSnap = await cols.users
-      .where("referralCode", "==", code)
-      .limit(1)
-      .get();
-    if (refSnap.empty) return;
+      const refSnap = await cols.users
+          .where("referralCode", "==", code)
+          .limit(1)
+          .get();
+      if (refSnap.empty) return;
 
-    const referrerUid = refSnap.docs[0].id;
-    if (referrerUid === uid) return; // no self-referral
+      const referrerUid = refSnap.docs[0].id;
+      if (referrerUid === uid) return; // no self-referral
 
-    await userDoc(uid).set(
-      {referralRewarded: true, updatedAt: Timestamp.now()},
-      {merge: true},
-    );
+      await userDoc(uid).set(
+          {referralRewarded: true, updatedAt: Timestamp.now()},
+          {merge: true},
+      );
 
-    await creditWallet({
-      uid,
-      amount: ECONOMY.refereeBonusCoins,
-      type: "referral",
-      title: "Referral welcome bonus",
-      referenceId: referrerUid,
-    });
+      await creditWallet({
+        uid,
+        amount: ECONOMY.refereeBonusCoins,
+        type: "referral",
+        title: "Referral welcome bonus",
+        referenceId: referrerUid,
+      });
 
-    await creditWallet({
-      uid: referrerUid,
-      amount: ECONOMY.referrerBonusCoins,
-      type: "referral",
-      title: "Friend joined with your code",
-      referenceId: uid,
-    });
+      await creditWallet({
+        uid: referrerUid,
+        amount: ECONOMY.referrerBonusCoins,
+        type: "referral",
+        title: "Friend joined with your code",
+        referenceId: uid,
+      });
 
-    await sendUserNotification(referrerUid, {
-      type: "referral",
-      title: "A friend joined! 🎉",
-      body: `You earned ${ECONOMY.referrerBonusCoins} coins.`,
-      deeplink: "/referrals",
-    });
-  },
+      await sendUserNotification(referrerUid, {
+        type: "referral",
+        title: "A friend joined! 🎉",
+        body: `You earned ${ECONOMY.referrerBonusCoins} coins.`,
+        deeplink: "/referrals",
+      });
+    },
 );
 
 /** Cleans up a deleted account's data. */

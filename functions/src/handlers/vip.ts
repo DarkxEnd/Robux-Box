@@ -46,8 +46,8 @@ export const purchaseVipWithCoins = onCall(CALLABLE_OPTS, async (req) => {
   const price = ECONOMY.vipCoinPrices[tier];
   if (!price) {
     throw new HttpsError(
-      "invalid-argument",
-      "That tier can only be purchased with real money.",
+        "invalid-argument",
+        "That tier can only be purchased with real money.",
     );
   }
 
@@ -66,8 +66,8 @@ export const purchaseVipWithCoins = onCall(CALLABLE_OPTS, async (req) => {
     current.vipExpiresAt as FirebaseFirestore.Timestamp | null,
   );
   await userDoc(uid).set(
-    {vipLevel: tier, vipExpiresAt: expiresAt, updatedAt: Timestamp.now()},
-    {merge: true},
+      {vipLevel: tier, vipExpiresAt: expiresAt, updatedAt: Timestamp.now()},
+      {merge: true},
   );
 
   await cols.vipPurchases.add({
@@ -104,7 +104,7 @@ export const verifyVipPurchase = onCall(CALLABLE_OPTS, async (req) => {
 
   // One receipt, one account — reject a token already bound to someone else.
   const tokenRef = cols.vipPurchases.doc(
-    Buffer.from(purchaseToken).toString("base64url").slice(0, 400),
+      Buffer.from(purchaseToken).toString("base64url").slice(0, 400),
   );
   const existing = await tokenRef.get();
   if (existing.exists && existing.data()?.uid !== uid) {
@@ -118,8 +118,8 @@ export const verifyVipPurchase = onCall(CALLABLE_OPTS, async (req) => {
 
   const expiresAt = Timestamp.fromMillis(result.expiryMillis);
   await userDoc(uid).set(
-    {vipLevel: tier, vipExpiresAt: expiresAt, updatedAt: Timestamp.now()},
-    {merge: true},
+      {vipLevel: tier, vipExpiresAt: expiresAt, updatedAt: Timestamp.now()},
+      {merge: true},
   );
 
   await tokenRef.set({
@@ -161,8 +161,8 @@ export const claimVipDailyBonus = onCall(CALLABLE_OPTS, async (req) => {
   }
 
   await userDoc(uid).set(
-    {lastVipBonusAt: Timestamp.now(), updatedAt: Timestamp.now()},
-    {merge: true},
+      {lastVipBonusAt: Timestamp.now(), updatedAt: Timestamp.now()},
+      {merge: true},
   );
 
   const balance = await creditWallet({

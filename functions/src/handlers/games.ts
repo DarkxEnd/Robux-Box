@@ -52,8 +52,8 @@ export const playDailyGame = onCall(CALLABLE_OPTS, async (req) => {
   const coins = table.prizes[index];
 
   await userDoc(uid).set(
-    {[table.field]: Timestamp.now(), updatedAt: Timestamp.now()},
-    {merge: true},
+      {[table.field]: Timestamp.now(), updatedAt: Timestamp.now()},
+      {merge: true},
   );
 
   const balance = await creditWallet({

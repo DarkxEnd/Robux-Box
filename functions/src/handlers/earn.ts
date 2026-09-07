@@ -60,8 +60,8 @@ export const beginRewardedAd = onCall(CALLABLE_OPTS, async (req) => {
   const watched = adsWatchedToday(user);
   if (watched >= cap) {
     throw new HttpsError(
-      "resource-exhausted",
-      "You've reached today's ad limit. Come back tomorrow!",
+        "resource-exhausted",
+        "You've reached today's ad limit. Come back tomorrow!",
     );
   }
 
@@ -69,8 +69,8 @@ export const beginRewardedAd = onCall(CALLABLE_OPTS, async (req) => {
   const elapsed = (Date.now() - lastAt) / 1000;
   if (lastAt && elapsed < ECONOMY.rewardedAdCooldownSeconds) {
     throw new HttpsError(
-      "failed-precondition",
-      `Please wait ${Math.ceil(ECONOMY.rewardedAdCooldownSeconds - elapsed)}s.`,
+        "failed-precondition",
+        `Please wait ${Math.ceil(ECONOMY.rewardedAdCooldownSeconds - elapsed)}s.`,
     );
   }
 
@@ -99,8 +99,8 @@ export const confirmRewardedAd = onCall(CALLABLE_OPTS, async (req) => {
   const ssv = await cols.adImpressions.doc(nonce).get();
   if (process.env.STRICT_SSV === "true" && ssv.data()?.verified !== true) {
     throw new HttpsError(
-      "failed-precondition",
-      "This reward could not be verified. Please try another ad.",
+        "failed-precondition",
+        "This reward could not be verified. Please try another ad.",
     );
   }
 
@@ -113,12 +113,12 @@ export const confirmRewardedAd = onCall(CALLABLE_OPTS, async (req) => {
 
   const watched = adsWatchedToday(user);
   await userDoc(uid).set(
-    {
-      adsWatchedToday: watched + 1,
-      lastAdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    },
-    {merge: true},
+      {
+        adsWatchedToday: watched + 1,
+        lastAdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      },
+      {merge: true},
   );
 
   const balance = await creditWallet({
@@ -159,12 +159,12 @@ export const claimDailyReward = onCall(CALLABLE_OPTS, async (req) => {
   const coins = table[(streak - 1) % table.length];
 
   await userDoc(uid).set(
-    {
-      dailyStreak: streak,
-      lastDailyRewardAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    },
-    {merge: true},
+      {
+        dailyStreak: streak,
+        lastDailyRewardAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      },
+      {merge: true},
   );
 
   const balance = await creditWallet({
@@ -220,9 +220,9 @@ export const redeemPromocode = onCall(CALLABLE_OPTS, async (req) => {
 
     t.set(ref, {redemptionCount: used + 1}, {merge: true});
     t.set(
-      usageRef,
-      {uid, count: mine + 1, lastUsedAt: Timestamp.now()},
-      {merge: true},
+        usageRef,
+        {uid, count: mine + 1, lastUsedAt: Timestamp.now()},
+        {merge: true},
     );
     return (p.rewardCoins as number) ?? 0;
   });
@@ -258,8 +258,8 @@ export const resolveTier = onCall(CALLABLE_OPTS, async (req) => {
   const country = ofRecord || hinted || "US";
   if (!ofRecord && country) {
     await userDoc(uid).set(
-      {countryCode: country, updatedAt: Timestamp.now()},
-      {merge: true},
+        {countryCode: country, updatedAt: Timestamp.now()},
+        {merge: true},
     );
   }
 
@@ -289,8 +289,8 @@ export const claimRateAppReward = onCall(CALLABLE_OPTS, async (req) => {
   }
 
   await userDoc(uid).set(
-    {rateAppRewardClaimed: true, updatedAt: Timestamp.now()},
-    {merge: true},
+      {rateAppRewardClaimed: true, updatedAt: Timestamp.now()},
+      {merge: true},
   );
 
   const coins = ECONOMY.rateAppRewardCoins;
@@ -316,10 +316,10 @@ export const recentTransactions = onCall(CALLABLE_OPTS, async (req) => {
   const uid = requireAuth(req);
   const limit = Math.min(Math.max(Number(req.data?.limit ?? 25), 1), 100);
   const snap = await subcols
-    .transactions(uid)
-    .orderBy("createdAt", "desc")
-    .limit(limit)
-    .get();
+      .transactions(uid)
+      .orderBy("createdAt", "desc")
+      .limit(limit)
+      .get();
   return {
     items: snap.docs.map((d) => ({id: d.id, ...d.data()})),
   };

@@ -12,53 +12,53 @@ import {sendUserNotification} from "../lib/notify";
  * (lifetimeEarned | lifetimeSpent | coins), threshold, rewardCoins.
  */
 export const syncAchievementsOnWalletWrite = onDocumentWritten(
-  {document: "wallets/{uid}", region: "us-central1"},
-  async (event) => {
-    const after = event.data?.after.data();
-    if (!after) return;
-    const uid = event.params.uid as string;
+    {document: "wallets/{uid}", region: "us-central1"},
+    async (event) => {
+      const after = event.data?.after.data();
+      if (!after) return;
+      const uid = event.params.uid as string;
 
-    const defs = await cols.achievements.where("isActive", "==", true).get();
-    if (defs.empty) return;
+      const defs = await cols.achievements.where("isActive", "==", true).get();
+      if (defs.empty) return;
 
-    for (const def of defs.docs) {
-      const d = def.data();
-      const metric = String(d.metric ?? "lifetimeEarned");
-      const threshold = Number(d.threshold ?? 0);
-      const value = Number(after[metric] ?? 0);
-      if (threshold <= 0 || value < threshold) continue;
+      for (const def of defs.docs) {
+        const d = def.data();
+        const metric = String(d.metric ?? "lifetimeEarned");
+        const threshold = Number(d.threshold ?? 0);
+        const value = Number(after[metric] ?? 0);
+        if (threshold <= 0 || value < threshold) continue;
 
-      const mineRef = subcols.achievements(uid).doc(def.id);
-      const mine = await mineRef.get();
-      if (mine.exists && mine.data()?.unlocked === true) continue;
+        const mineRef = subcols.achievements(uid).doc(def.id);
+        const mine = await mineRef.get();
+        if (mine.exists && mine.data()?.unlocked === true) continue;
 
-      await mineRef.set(
-        {
-          achievementId: def.id,
-          unlocked: true,
-          value,
-          unlockedAt: Timestamp.now(),
-        },
-        {merge: true},
-      );
+        await mineRef.set(
+            {
+              achievementId: def.id,
+              unlocked: true,
+              value,
+              unlockedAt: Timestamp.now(),
+            },
+            {merge: true},
+        );
 
-      const reward = Number(d.rewardCoins ?? 0);
-      if (reward > 0) {
-        await creditWallet({
-          uid,
-          amount: reward,
-          type: "achievement",
-          title: `Achievement: ${d.title ?? def.id}`,
-          referenceId: def.id,
+        const reward = Number(d.rewardCoins ?? 0);
+        if (reward > 0) {
+          await creditWallet({
+            uid,
+            amount: reward,
+            type: "achievement",
+            title: `Achievement: ${d.title ?? def.id}`,
+            referenceId: def.id,
+          });
+        }
+
+        await sendUserNotification(uid, {
+          type: "reward",
+          title: "Achievement unlocked 🏆",
+          body: `${d.title ?? def.id}${reward > 0 ? ` — +${reward} coins` : ""}`,
+          deeplink: "/achievements",
         });
       }
-
-      await sendUserNotification(uid, {
-        type: "reward",
-        title: `Achievement unlocked 🏆`,
-        body: `${d.title ?? def.id}${reward > 0 ? ` — +${reward} coins` : ""}`,
-        deeplink: "/achievements",
-      });
-    }
-  },
+    },
 );
