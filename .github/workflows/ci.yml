@@ -74,6 +74,17 @@ jobs:
     # Only release builds are signed and published; PR builds stop at the
     # checks above so a fork can never reach the signing key.
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # The rolling release needs contents: write. Without a permissions block
+    # the job gets whatever the repository default is, and on a read-only
+    # default softprops/action-gh-release fails with
+    # "Resource not accessible by integration" (403) — after a ten-minute
+    # build that produced a perfectly good AAB and APK.
+    #
+    # Scoped to this job, and to this one scope: the other two jobs read the
+    # repository and nothing else, so leaving them at the default keeps the
+    # write grant on the only step that needs it.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
