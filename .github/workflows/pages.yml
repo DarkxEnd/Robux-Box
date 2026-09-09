@@ -1,0 +1,36 @@
+name: Publish policy pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web_public/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+# Play Console requires a reachable privacy policy URL, and AdMob requires the
+# same. These pages are the ones referenced by AppConfig.privacyUrl/termsUrl,
+# so a broken deploy here breaks store compliance, not just a link.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web_public
+      - id: deployment
+        uses: actions/deploy-pages@v4
