@@ -1,0 +1,95 @@
+name: robux_box
+description: "Robux Box — earn app coins by watching rewarded ads and completing offerwall tasks, then redeem for Robux, gift cards and digital rewards."
+publish_to: "none"
+version: 3.0.0+7
+
+environment:
+  # Floor raised to 3.38 for in_app_purchase 3.3.x, which is the first release
+  # built on Google Play Billing Library 8 — Play Console rejects uploads using
+  # the older Billing versions that in_app_purchase 3.2.x shipped.
+  sdk: ">=3.10.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Firebase — the trust boundary. Everything of value is decided server-side.
+  firebase_core: ^3.8.0
+  firebase_auth: ^5.3.3
+  cloud_firestore: ^5.5.0
+  cloud_functions: ^5.1.4
+  firebase_messaging: ^15.1.5
+  firebase_app_check: ^0.3.1+5
+  firebase_storage: ^12.3.6
+  firebase_analytics: ^11.3.5
+  firebase_crashlytics: ^4.1.5
+
+  # Auth providers
+  google_sign_in: ^6.2.2
+
+  # Monetisation
+  google_mobile_ads: ^5.2.0
+  in_app_purchase: ^3.3.0
+  webview_flutter: ^4.10.0
+  app_tracking_transparency: ^2.0.6
+
+  # State management + routing
+  flutter_riverpod: ^2.6.1
+  go_router: ^14.6.1
+
+  # Storage / device
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.3
+  device_info_plus: ^11.1.1
+  package_info_plus: ^8.1.1
+  connectivity_plus: ^6.1.0
+
+  # Location → geo tier (server re-validates; client value is a UI hint only).
+  # geocoding turns the fix into an ISO country code without a network call of
+  # our own; geolocator alone only yields coordinates.
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+  permission_handler: ^11.3.1
+
+  # Notifications
+  flutter_local_notifications: ^18.0.1
+  path_provider: ^2.1.5
+
+  # UI
+  flutter_animate: ^4.5.2
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  google_fonts: ^6.2.1
+  lottie: ^3.1.3
+
+  # Utilities
+  equatable: ^2.0.7
+  intl: ^0.20.3
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.2
+  image_picker: ^1.1.2
+  in_app_review: ^2.0.10
+  crypto: ^3.0.6
+  rxdart: ^0.28.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  # Paths recovered verbatim from the shipped bundle, so every existing
+  # asset reference in the app resolves unchanged.
+  assets:
+    - assets/images/
+    - assets/images/robux_packages/
+    - assets/images/redeem_brand_cards/
+    - assets/icons/
+    - assets/icons/brands/
+    - assets/sounds/
+    - assets/animations/

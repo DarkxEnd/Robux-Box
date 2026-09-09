@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "878768707356",
+    "project_id": "robux-box1",
+    "storage_bucket": "robux-box1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878768707356:android:9fad7a36fb0c6a30d5ccd9",
+        "android_client_info": {
+          "package_name": "com.robuxbox.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878768707356-cglfcajo562gbn9qtgmtme3srfra2q07.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.robuxbox.app",
+            "certificate_hash": "010fbf533aedd2075b32435ee1e50de78e4178c0"
+          }
+        },
+        {
+          "client_id": "878768707356-fo98o6lac5g8uoj0i1b2q86k65928rn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.robuxbox.app",
+            "certificate_hash": "e54adf6b10759ad5dd926ccbfae07bedfcf7ad31"
+          }
+        },
+        {
+          "client_id": "878768707356-griv81uqolfkl9d5ajtgtlfq31oth6ig.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.robuxbox.app",
+            "certificate_hash": "e464ee0f2c70529777d36f47a1a2186c9f87a799"
+          }
+        },
+        {
+          "client_id": "878768707356-cr8erm90d7mfs9aneekph60qjse267io.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOuRGpgYkQ3-N7eKPfu_zsgi3n2zuVyGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878768707356-cr8erm90d7mfs9aneekph60qjse267io.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "878768707356-5tta7g7lt9dsvqljaubou75ug0cnil0v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.robuxbox.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
