@@ -65,11 +65,11 @@ class AppConfig {
       ),
       privacyUrl: const String.fromEnvironment(
         'PRIVACY_URL',
-        defaultValue: 'https://dark7end.github.io/Robux-Box/privacy.html',
+        defaultValue: 'https://darkxend.github.io/Robux-Box/privacy.html',
       ),
       termsUrl: const String.fromEnvironment(
         'TERMS_URL',
-        defaultValue: 'https://dark7end.github.io/Robux-Box/terms.html',
+        defaultValue: 'https://darkxend.github.io/Robux-Box/terms.html',
       ),
     );
   }
