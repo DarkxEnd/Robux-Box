@@ -111,7 +111,40 @@ jobs:
             echo "::error::KEYSTORE_BASE64 is not set; refusing to build unsigned."
             exit 1
           fi
-          echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+          # base64 -d tolerates line wrapping but not certutil's BEGIN/END
+          # header, and the old code ignored its exit status — a rejected
+          # decode still left a truncated file behind and the build carried on
+          # with it. Check the decode itself.
+          if ! echo "$KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks 2>/dev/null; then
+            echo "::error::KEYSTORE_BASE64 is not valid base64, so the keystore was not restored. On Windows, certutil -encode adds BEGIN/END lines that break this; use PowerShell [Convert]::ToBase64String([IO.File]::ReadAllBytes('upload-keystore.jks')) or base64 -w0 upload-keystore.jks."
+            exit 1
+          fi
+
+          # keytool rather than a magic-byte check: this keystore is PKCS#12,
+          # which is what keytool has produced by default since JDK 9, so the
+          # FEEDFEED magic of a legacy JKS is absent and testing for it would
+          # reject a perfectly good key. This validates the container and the
+          # store password together, and accepts either format.
+          #
+          # Doing it here turns a bad secret into a five-second failure that
+          # names itself, instead of a ten-minute build that compiles the whole
+          # app and then dies in :app:signReleaseBundle on
+          # "DerInputStream.getLength(): lengthTag=98, too big" — which reads
+          # like a damaged key rather than a mis-encoded secret.
+          if ! keytool -list -keystore android/app/upload-keystore.jks \
+               -storepass "$KEYSTORE_PASSWORD" >/dev/null 2>&1; then
+            echo "::error::The restored file is not a keystore KEYSTORE_PASSWORD can open. Either KEYSTORE_BASE64 holds the wrong bytes or KEYSTORE_PASSWORD is wrong."
+            exit 1
+          fi
+
+          # The alias is what signing looks up; a wrong one fails late and
+          # confusingly. Output is dropped because it prints fingerprints.
+          if ! keytool -list -keystore android/app/upload-keystore.jks \
+               -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" >/dev/null 2>&1; then
+            echo "::error::KEY_ALIAS names an entry that is not in this keystore."
+            exit 1
+          fi
+
           cat > android/key.properties <<EOF
           storeFile=upload-keystore.jks
           storePassword=$KEYSTORE_PASSWORD
