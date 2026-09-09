@@ -26,8 +26,13 @@ afterwards.
 | `GOOGLE_SERVICES_JSON` | ci.yml | contents of `android/app/google-services.json` |
 | `ADMOB_REWARDED_ANDROID` | ci.yml | `ca-app-pub-2788515829400980/9337028990` |
 | `ADMOB_REWARDED_INTERSTITIAL_ANDROID` | ci.yml | rewarded interstitial unit |
-| `ADMOB_APP_OPEN_ANDROID` | ci.yml | app-open unit |
-| `ADMOB_BANNER_ANDROID` | ci.yml | banner unit |
+
+Rewarded video is the only ad format the app shows. Banner and app-open were
+removed: the banner widget existed but no screen ever mounted it, and app-open
+was a config field with no implementation behind it at all, so both were dead
+weight carrying a Google test unit id as their default. `ADMOB_APP_OPEN_ANDROID`
+and `ADMOB_BANNER_ANDROID` are therefore not secrets any more — nothing reads
+them.
 | `FIREBASE_SERVICE_ACCOUNT` | deploy, seed, logs | service-account JSON |
 | `LOOTWALLS_API_KEY` | deploy | Lootwalls API key, from their dashboard |
 | `LOOTWALLS_SECRET` | deploy | Lootwalls "Secret (for postback)" |

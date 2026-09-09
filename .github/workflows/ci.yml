@@ -156,30 +156,22 @@ jobs:
         env:
           ADMOB_REWARDED_ANDROID: ${{ secrets.ADMOB_REWARDED_ANDROID }}
           ADMOB_REWARDED_INTERSTITIAL_ANDROID: ${{ secrets.ADMOB_REWARDED_INTERSTITIAL_ANDROID }}
-          ADMOB_APP_OPEN_ANDROID: ${{ secrets.ADMOB_APP_OPEN_ANDROID }}
-          ADMOB_BANNER_ANDROID: ${{ secrets.ADMOB_BANNER_ANDROID }}
         run: |
           flutter build appbundle --release \
             --dart-define=FLAVOR=prod \
             --dart-define=ADMOB_REWARDED_ANDROID="$ADMOB_REWARDED_ANDROID" \
             --dart-define=ADMOB_REWARDED_INTERSTITIAL_ANDROID="$ADMOB_REWARDED_INTERSTITIAL_ANDROID" \
-            --dart-define=ADMOB_APP_OPEN_ANDROID="$ADMOB_APP_OPEN_ANDROID" \
-            --dart-define=ADMOB_BANNER_ANDROID="$ADMOB_BANNER_ANDROID" \
             --obfuscate --split-debug-info=build/symbols
 
       - name: Build APK
         env:
           ADMOB_REWARDED_ANDROID: ${{ secrets.ADMOB_REWARDED_ANDROID }}
           ADMOB_REWARDED_INTERSTITIAL_ANDROID: ${{ secrets.ADMOB_REWARDED_INTERSTITIAL_ANDROID }}
-          ADMOB_APP_OPEN_ANDROID: ${{ secrets.ADMOB_APP_OPEN_ANDROID }}
-          ADMOB_BANNER_ANDROID: ${{ secrets.ADMOB_BANNER_ANDROID }}
         run: |
           flutter build apk --release \
             --dart-define=FLAVOR=prod \
             --dart-define=ADMOB_REWARDED_ANDROID="$ADMOB_REWARDED_ANDROID" \
-            --dart-define=ADMOB_REWARDED_INTERSTITIAL_ANDROID="$ADMOB_REWARDED_INTERSTITIAL_ANDROID" \
-            --dart-define=ADMOB_APP_OPEN_ANDROID="$ADMOB_APP_OPEN_ANDROID" \
-            --dart-define=ADMOB_BANNER_ANDROID="$ADMOB_BANNER_ANDROID"
+            --dart-define=ADMOB_REWARDED_INTERSTITIAL_ANDROID="$ADMOB_REWARDED_INTERSTITIAL_ANDROID"
 
       - name: Remove signing material
         if: always()

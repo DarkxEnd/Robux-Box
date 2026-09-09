@@ -17,8 +17,6 @@ class AppConfig {
     required this.useEmulators,
     required this.admobRewardedAndroid,
     required this.admobRewardedInterstitialAndroid,
-    required this.admobAppOpenAndroid,
-    required this.admobBannerAndroid,
     required this.minWithdrawCoins,
     required this.supportEmail,
     required this.privacyUrl,
@@ -47,14 +45,6 @@ class AppConfig {
         'ADMOB_REWARDED_INTERSTITIAL_ANDROID',
         defaultValue: 'ca-app-pub-3940256099942544/5354046379',
       ),
-      admobAppOpenAndroid: const String.fromEnvironment(
-        'ADMOB_APP_OPEN_ANDROID',
-        defaultValue: 'ca-app-pub-3940256099942544/9257395921',
-      ),
-      admobBannerAndroid: const String.fromEnvironment(
-        'ADMOB_BANNER_ANDROID',
-        defaultValue: 'ca-app-pub-3940256099942544/6300978111',
-      ),
       minWithdrawCoins: const int.fromEnvironment(
         'MIN_WITHDRAW_COINS',
         defaultValue: 1000,
@@ -78,8 +68,6 @@ class AppConfig {
   final bool useEmulators;
   final String admobRewardedAndroid;
   final String admobRewardedInterstitialAndroid;
-  final String admobAppOpenAndroid;
-  final String admobBannerAndroid;
   final int minWithdrawCoins;
   final String supportEmail;
   final String privacyUrl;
@@ -98,8 +86,6 @@ class AppConfig {
     useEmulators: useEmulators ?? this.useEmulators,
     admobRewardedAndroid: admobRewardedAndroid,
     admobRewardedInterstitialAndroid: admobRewardedInterstitialAndroid,
-    admobAppOpenAndroid: admobAppOpenAndroid,
-    admobBannerAndroid: admobBannerAndroid,
     minWithdrawCoins: minWithdrawCoins,
     supportEmail: supportEmail,
     privacyUrl: privacyUrl,
