@@ -14,7 +14,7 @@ import '../../../models/offerwall.dart';
 import '../data/offers_repository.dart';
 import 'widgets/offer_card.dart';
 
-/// The offerwall hub: the three providers, then featured offers.
+/// The offerwall hub: the enabled providers, then featured offers.
 class TasksScreen extends ConsumerWidget {
   const TasksScreen({super.key});
 

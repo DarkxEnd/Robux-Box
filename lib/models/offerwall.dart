@@ -1,8 +1,12 @@
 import 'package:equatable/equatable.dart';
 
-/// The three offerwall networks. The wire values must match the
-/// `OfferwallProvider` union in `functions/src/handlers/offerwall.ts` — the
-/// `getOfferwallUrl` callable switches on exactly these strings.
+/// Every offerwall network the app can talk to. The wire values must match
+/// the `OfferwallProvider` union in `functions/src/handlers/offerwall.ts` —
+/// the `getOfferwallUrl` callable switches on exactly these strings.
+///
+/// Being listed here does not mean a network is live: which ones are offered
+/// is `OfferwallService.ordered`, and which ones the server will sign a URL
+/// for is `ENABLED_PROVIDERS` in that handler.
 enum OfferwallProvider {
   cpx('cpx', 'CPX Research'),
   cpalead('cpalead', 'CPAlead'),

@@ -86,15 +86,35 @@ function lootwallsWallUrl(uid: string): string {
 }
 
 /**
- * Returns a per-user offerwall URL for the caller, for whichever provider the
- * client asked for (defaults to CPX). Each provider's signing secret / wall
- * config lives only in Cloud Functions env, never in the app.
+ * The providers currently live, and the default when a client asks for one
+ * that is not.
+ *
+ * CPX and CPAlead have not approved this publisher, so their walls would
+ * render an error and their postbacks have no secret to verify against. The
+ * integration code stays — re-enabling one is adding it back to this list and
+ * setting its secret — but nothing is served for it in the meantime.
+ *
+ * Mirrored by `OfferwallService.ordered` on the client. The client list
+ * decides what is offered; this one decides what is served, so a stale build
+ * or a hand-made call cannot reach a disabled provider.
+ */
+const ENABLED_PROVIDERS: readonly OfferwallProvider[] = ["lootwalls"];
+const DEFAULT_PROVIDER: OfferwallProvider = "lootwalls";
+
+function isEnabled(v: string): v is OfferwallProvider {
+  return (ENABLED_PROVIDERS as readonly string[]).includes(v);
+}
+
+/**
+ * Returns a per-user offerwall URL for the caller, for whichever enabled
+ * provider the client asked for. Each provider's signing secret / wall config
+ * lives only in Cloud Functions env, never in the app.
  */
 export const getOfferwallUrl = onCall(CALLABLE_OPTS, async (req) => {
   const uid = requireAuth(req);
   const requested = String(req.data?.provider ?? "");
   const provider: OfferwallProvider =
-    requested === "cpalead" || requested === "lootwalls" ? requested : "cpx";
+    isEnabled(requested) ? requested : DEFAULT_PROVIDER;
 
   if (provider === "cpalead") {
     return {url: cpaleadWallUrl(uid), provider};
@@ -237,8 +257,21 @@ export const offerwallPostback = onRequest(
           return;
         }
 
+        // The same not-configured guard the other two postbacks carry, and
+        // this one needs it most: with no secret the expected hash is
+        // md5(`${transId}-`), which anyone can compute for a transId they
+        // chose themselves. An unconfigured endpoint would mint coins for
+        // whatever uid the caller names, so refuse instead of verifying
+        // against the empty string.
+        const cpxSecret = cpxSecureHashSecret();
+        if (!cpxSecret) {
+          console.error("offerwallPostback: CPX_SECURE_HASH is not set");
+          res.status(503).send("not configured");
+          return;
+        }
+
         // Verify CPX's signature: md5(trans_id-secret).
-        if (!secretsMatch(hash, md5(`${transId}-${cpxSecureHashSecret()}`))) {
+        if (!secretsMatch(hash, md5(`${transId}-${cpxSecret}`))) {
           await flagFraud(uid, "offerwall_bad_signature", {transId});
           res.status(403).send("bad signature");
           return;

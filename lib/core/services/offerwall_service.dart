@@ -22,11 +22,16 @@ class OfferwallService {
     return res.map(OfferwallSession.fromMap);
   }
 
-  /// Providers in the order they should appear. CPX first — it has the widest
-  /// survey inventory and the fastest crediting of the three.
-  static const List<OfferwallProvider> ordered = [
-    OfferwallProvider.cpx,
-    OfferwallProvider.cpalead,
-    OfferwallProvider.lootwalls,
-  ];
+  /// The providers to offer, in the order they should appear.
+  ///
+  /// Only Lootwalls is live: CPX and CPAlead have not approved this publisher,
+  /// so their walls would open on an error page. The integration code for all
+  /// three is intact — re-enabling one is adding it back here and to
+  /// `ENABLED_PROVIDERS` in `functions/src/handlers/offerwall.ts`, then
+  /// setting its secret.
+  ///
+  /// This list only decides what is *offered*. The server keeps its own list
+  /// and refuses to sign a URL for anything absent from it, so a stale build
+  /// cannot reach a disabled provider.
+  static const List<OfferwallProvider> ordered = [OfferwallProvider.lootwalls];
 }
