@@ -55,19 +55,37 @@ jobs:
 
       - name: Set function secrets
         env:
-          OFFERWALL_POSTBACK_SECRET: ${{ secrets.OFFERWALL_POSTBACK_SECRET }}
+          # The name on the left is what the function code reads out of
+          # process.env; the secret on the right is where the value comes from.
+          # These drifted apart once already — the file was writing
+          # LOOTWALLS_SECRET while the handler read LOOTWALLS_POSTBACK_SECRET,
+          # so the wall's postback saw an unset secret and answered 503 to
+          # every completion. Renaming either side alone breaks a payout
+          # silently, so keep them in step; test/env_wiring_test.dart fails if
+          # a variable the code reads stops being written here.
+          LOOTWALLS_API_KEY: ${{ secrets.LOOTWALLS_API_KEY }}
+          LOOTWALLS_POSTBACK_SECRET: ${{ secrets.LOOTWALLS_SECRET }}
           CPX_SECURE_HASH: ${{ secrets.CPX_SECURE_HASH }}
-          CPALEAD_SECRET: ${{ secrets.CPALEAD_SECRET }}
-          LOOTWALLS_SECRET: ${{ secrets.LOOTWALLS_SECRET }}
+          CPALEAD_POSTBACK_SECRET: ${{ secrets.CPALEAD_SECRET }}
+          CPALEAD_WALL_URL: ${{ secrets.CPALEAD_WALL_URL }}
+          OFFERWALL_APP_ID: ${{ secrets.OFFERWALL_APP_ID }}
         run: |
           # Written to functions/.env, which .gitignore blocks from ever being
           # committed. The postback secrets are what stop anyone from crediting
           # coins to any account.
+          #
+          # Each line is written only when the secret is set, and that is load
+          # bearing: every postback refuses with 503 when its secret is empty,
+          # so an unconfigured provider stays shut rather than verifying
+          # against the empty string. Never substitute a placeholder for a
+          # provider you are not using — an unset variable is the safe state.
           {
-            [ -n "$OFFERWALL_POSTBACK_SECRET" ] && echo "OFFERWALL_POSTBACK_SECRET=$OFFERWALL_POSTBACK_SECRET"
+            [ -n "$LOOTWALLS_API_KEY" ] && echo "LOOTWALLS_API_KEY=$LOOTWALLS_API_KEY"
+            [ -n "$LOOTWALLS_POSTBACK_SECRET" ] && echo "LOOTWALLS_POSTBACK_SECRET=$LOOTWALLS_POSTBACK_SECRET"
             [ -n "$CPX_SECURE_HASH" ] && echo "CPX_SECURE_HASH=$CPX_SECURE_HASH"
-            [ -n "$CPALEAD_SECRET" ] && echo "CPALEAD_SECRET=$CPALEAD_SECRET"
-            [ -n "$LOOTWALLS_SECRET" ] && echo "LOOTWALLS_SECRET=$LOOTWALLS_SECRET"
+            [ -n "$CPALEAD_POSTBACK_SECRET" ] && echo "CPALEAD_POSTBACK_SECRET=$CPALEAD_POSTBACK_SECRET"
+            [ -n "$CPALEAD_WALL_URL" ] && echo "CPALEAD_WALL_URL=$CPALEAD_WALL_URL"
+            [ -n "$OFFERWALL_APP_ID" ] && echo "OFFERWALL_APP_ID=$OFFERWALL_APP_ID"
           } > functions/.env || true
 
       - name: Deploy

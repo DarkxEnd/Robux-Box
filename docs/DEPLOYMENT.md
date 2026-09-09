@@ -29,10 +29,31 @@ afterwards.
 | `ADMOB_APP_OPEN_ANDROID` | ci.yml | app-open unit |
 | `ADMOB_BANNER_ANDROID` | ci.yml | banner unit |
 | `FIREBASE_SERVICE_ACCOUNT` | deploy, seed, logs | service-account JSON |
-| `OFFERWALL_POSTBACK_SECRET` | deploy | shared postback secret |
-| `CPX_SECURE_HASH` | deploy | CPX secure hash |
-| `CPALEAD_SECRET` | deploy | CPAlead postback secret |
-| `LOOTWALLS_SECRET` | deploy | Lootwalls postback secret |
+| `LOOTWALLS_API_KEY` | deploy | Lootwalls API key, from their dashboard |
+| `LOOTWALLS_SECRET` | deploy | Lootwalls "Secret (for postback)" |
+
+Only Lootwalls is live. CPX and CPAlead have not approved this publisher, so
+they are absent from `ENABLED_PROVIDERS` in `functions/src/handlers/offerwall.ts`
+and from `OfferwallService.ordered`, and their secrets are deliberately left
+unset:
+
+| Secret | Used by | What it is |
+| --- | --- | --- |
+| `CPX_SECURE_HASH` | deploy | CPX secure hash — leave unset while disabled |
+| `CPALEAD_SECRET` | deploy | CPAlead postback secret — leave unset while disabled |
+| `CPALEAD_WALL_URL` | deploy | CPAlead wall URL — leave unset while disabled |
+| `OFFERWALL_APP_ID` | deploy | CPX app id — leave unset while disabled |
+
+**Never put a placeholder in a disabled provider's secret.** Every postback
+refuses with 503 when its secret is empty, and that is the only thing keeping
+a disabled endpoint shut. Any value at all — even `disabled` or `x` — turns
+the guard off and reopens the endpoint behind a guessable secret.
+
+The name on the left of each line in the workflow's `Set function secrets`
+step is what the code reads from `process.env`; the secret it is assigned from
+may be named differently. `test/env_wiring_test.dart` fails if the two drift,
+because a mismatch there is silent — it once left every Lootwalls postback
+answering 503 with nobody credited.
 
 Generate any new shared secret with `openssl rand -hex 32`. Never a personal
 password: these secrets are the only thing standing between an attacker and
